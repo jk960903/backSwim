@@ -1,5 +1,6 @@
-package com.example.backswim;
+package com.example.backswim.configuration;
 
+import com.example.backswim.BackswimApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
 
