@@ -1,0 +1,37 @@
+#!/bin/bash
+
+GIT_ROOT=$(git rev-parse --show-toplevel)
+
+echo "Start Eslint ..."
+
+# get staged files 
+STAGED_FILES=$(git diff-index --cached --name-only HEAD)
+
+# split string to array by newline
+mapfile -t STAGED_FILES_ARR <<< "${STAGED_FILES}"
+
+echo "checking below files ..."
+for file in "${STAGED_FILES_ARR[@]}"
+do
+    if [[ $file =~ \.js$ ]]
+    then
+        echo "$file"
+    fi
+done
+
+# checking eslint respectively
+for file in "${STAGED_FILES_ARR[@]}"
+do
+    if [[ $file =~ \.js$ ]]
+    then
+        echo "checking - $file"
+        result=$(npx eslint $GIT_ROOT/$file)
+        if [ -z "$result" ]
+        then
+            echo "succeed"
+        else
+            echo "$result"
+            exit 1
+        fi
+    fi
+done
