@@ -1,0 +1,29 @@
+# This is commit template for committing from feature branch to dev branch
+# You should do unit test
+
+####################################################
+# Example Below
+# Title : [Feature][User] 
+#
+# Jira Number : WS-104
+#
+# Description
+# 이렇게 저렇게 구현 했습니다
+# 요 부분이 부족해보입니다.
+# 이 부분은 차후에 추가했습니다
+# 
+# Unit Test
+# [기능] -> [O/X] , X라면 이유
+# UI 정상 작동 -> O
+# 회원가입 완료 시 로그인 페이지 라우팅 -> O
+# 회원가입 백엔드 통신 -> X, Backend 구현 필요
+# 패스워드 확인 기능 -> X, 시간 부족
+######################################################
+
+Title: 
+
+Jira Number: 
+
+Description:  
+
+Unit test: 
