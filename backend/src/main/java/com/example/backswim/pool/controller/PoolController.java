@@ -5,6 +5,9 @@ import com.example.backswim.pool.error.PoolError;
 import com.example.backswim.pool.params.GetPoolMapParam;
 import com.example.backswim.pool.service.PoolService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -12,6 +15,9 @@ import org.springframework.validation.BindException;
 import org.springframework.web.bind.annotation.*;
 
 
+import javax.servlet.http.HttpServletRequest;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @RestController
@@ -20,6 +26,7 @@ import java.util.List;
 @RestControllerAdvice
 public class PoolController {
 
+    Logger logger = LoggerFactory.getLogger(this.getClass());
     /**
      * 현재 위치를 토대로 가져오기
      * longitude = 경도
@@ -41,22 +48,31 @@ public class PoolController {
      * @return
      */
     @ExceptionHandler(BindException.class)
-    public ResponseEntity sampleError(){
+    public ResponseEntity sampleError(HttpServletRequest request){
         PoolError error = new PoolError();
         error.setErrorCode("400");
         error.setErrorMessage("WRONG TYPE");
+
+        logger.info("요청 URL : {}",request.getRequestURL());
+        logger.info("요청시간 : {}", LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss")));
+        logger.info("클라이언트 IP : {}",request.getRemoteAddr());
 
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
     }
 
 
     @GetMapping("/getpoolmapforlocate")
-    public ResponseEntity<List<PoolEntity>> GetPoolMapForLocate(GetPoolMapParam getPoolMapParam){
+    public ResponseEntity<List<PoolEntity>> GetPoolMapForLocate(HttpServletRequest request, GetPoolMapParam getPoolMapParam){
         HttpHeaders header = new HttpHeaders();
         if(!getPoolMapParam.checkStatus()){
             return new ResponseEntity<>(null,header,HttpStatus.BAD_REQUEST);
         }
         List<PoolEntity> lists = poolService.findPoolListForMapLocate(getPoolMapParam);
+
+        logger.info("요청 URL : {}",request.getRequestURL());
+        logger.info("요청시간 : {}", LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss")));
+        logger.info("클라이언트 IP : {}",request.getRemoteAddr());
+
         return new ResponseEntity<>(lists,header, HttpStatus.OK);
     }
 }
