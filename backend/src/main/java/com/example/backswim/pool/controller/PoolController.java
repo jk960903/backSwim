@@ -1,21 +1,23 @@
 package com.example.backswim.pool.controller;
 
 import com.example.backswim.pool.entity.PoolEntity;
+import com.example.backswim.pool.error.PoolError;
 import com.example.backswim.pool.params.GetPoolMapParam;
 import com.example.backswim.pool.service.PoolService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.validation.BindException;
+import org.springframework.web.bind.annotation.*;
+
 
 import java.util.List;
 
 @RestController
 @RequestMapping(value="api/pool")
 @RequiredArgsConstructor
+@RestControllerAdvice
 public class PoolController {
 
     /**
@@ -30,6 +32,22 @@ public class PoolController {
      */
 
     private final PoolService poolService;
+
+    /**
+     * 타입 에러에 대한 Handler
+     * 컨트롤러 자체에 들어가기 전 상황에 대해 Bind Exception 발생시 작동됩니다.
+     * 주로 Parameter에 타입 에러가 들어갔을 경우
+     * ex ) int 형인데 char형 or String이 들어갔을 경우
+     * @return
+     */
+    @ExceptionHandler(BindException.class)
+    public ResponseEntity sampleError(){
+        PoolError error = new PoolError();
+        error.setErrorCode("400");
+        error.setErrorMessage("WRONG TYPE");
+
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
+    }
 
 
     @GetMapping("/getpoolmapforlocate")
