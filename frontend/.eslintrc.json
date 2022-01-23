@@ -17,6 +17,7 @@
     "plugins": [
         "react"
     ],
+    "ignorePatterns": ["*.config.js", "*test.js", "__mocks__/*"],
     "rules": {
     },
     "settings": {

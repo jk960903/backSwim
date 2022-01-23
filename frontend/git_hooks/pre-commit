@@ -25,7 +25,7 @@ do
     if [[ $file =~ \.js$ ]]
     then
         echo "checking - $file"
-        result=$(npx eslint $GIT_ROOT/$file)
+        result=$(npx eslint --quiet $GIT_ROOT/$file)
         if [ -z "$result" ]
         then
             echo "succeed"
