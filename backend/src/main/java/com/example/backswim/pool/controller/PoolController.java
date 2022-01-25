@@ -26,7 +26,7 @@ import java.util.List;
 @RestControllerAdvice
 public class PoolController {
 
-    Logger logger = LoggerFactory.getLogger(this.getClass());
+    private Logger logger = LoggerFactory.getLogger(this.getClass());
     /**
      * 현재 위치를 토대로 가져오기
      * longitude = 경도
