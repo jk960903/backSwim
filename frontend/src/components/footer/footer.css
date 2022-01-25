@@ -1,0 +1,28 @@
+@import url(../../root.css);
+
+:root {
+  /* Size */
+  --footer-height: 100px;
+  --footer-backgroud-color: var(--grey-color);
+}
+
+.footer {
+  height: var(--footer-height);
+  display: grid;
+  grid-template-columns: 1fr 2fr 1fr;
+  background-color: var(--footer-backgroud-color);
+}
+
+.footer > * {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.footer-container-logo > i {
+  font-size: 2rem;
+}
+
+.footer-container-button {
+  flex-direction: row;
+}

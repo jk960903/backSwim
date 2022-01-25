@@ -14,7 +14,7 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "test": "jest --no-color 2>jest_result.txt",
+    "test": "jest --no-color --verbose 2>&1 | tee jest_result.txt",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {

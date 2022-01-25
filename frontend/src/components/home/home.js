@@ -1,5 +1,7 @@
 import React from 'react';
 import Header from '../header/header.js';
+import Footer from '../footer/footer.js';
+
 class Home extends React.Component {
   constructor(props) {
     super(props);
@@ -12,6 +14,7 @@ class Home extends React.Component {
     return (
       <div>
         <Header isLogin={this.state.isLogin}></Header>
+        <Footer></Footer>
       </div>
     );
   }
