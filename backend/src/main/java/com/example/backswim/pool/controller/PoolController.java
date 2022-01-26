@@ -1,5 +1,8 @@
 package com.example.backswim.pool.controller;
 
+import com.example.backswim.pool.apiresult.APIResult;
+import com.example.backswim.pool.apiresult.PoolAPI;
+import com.example.backswim.pool.dto.PoolDto;
 import com.example.backswim.pool.entity.PoolEntity;
 import com.example.backswim.pool.error.PoolError;
 import com.example.backswim.pool.params.GetPoolMapParam;
@@ -48,7 +51,7 @@ public class PoolController {
      * @return
      */
     @ExceptionHandler(BindException.class)
-    public ResponseEntity sampleError(HttpServletRequest request){
+    public APIResult sampleError(HttpServletRequest request){
         PoolError error = new PoolError();
         error.setErrorCode("400");
         error.setErrorMessage("WRONG TYPE");
@@ -57,22 +60,23 @@ public class PoolController {
         logger.info("요청시간 : {}", LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss")));
         logger.info("클라이언트 IP : {}",request.getRemoteAddr());
 
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
+        return new APIResult(400,null,"WRONG TYPE");
     }
 
 
     @GetMapping("/getpoolmapforlocate")
-    public ResponseEntity<List<PoolEntity>> GetPoolMapForLocate(HttpServletRequest request, GetPoolMapParam getPoolMapParam){
-        HttpHeaders header = new HttpHeaders();
+    public APIResult<PoolAPI> GetPoolMapForLocate(HttpServletRequest request, GetPoolMapParam getPoolMapParam){
         if(!getPoolMapParam.checkStatus()){
-            return new ResponseEntity<>(null,header,HttpStatus.BAD_REQUEST);
+            return new APIResult(400,null,"BAD_REQUEST PARAMETER");
         }
-        List<PoolEntity> lists = poolService.findPoolListForMapLocate(getPoolMapParam);
+        List<PoolDto> lists = poolService.findPoolListForMapLocate(getPoolMapParam);
+
+        PoolAPI poolAPI = new PoolAPI(lists,lists.size());
 
         logger.info("요청 URL : {}",request.getRequestURL());
         logger.info("요청시간 : {}", LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss")));
         logger.info("클라이언트 IP : {}",request.getRemoteAddr());
 
-        return new ResponseEntity<>(lists,header, HttpStatus.OK);
+        return new APIResult(200,poolAPI,"SUCCESS");
     }
 }

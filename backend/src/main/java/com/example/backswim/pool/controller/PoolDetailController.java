@@ -1,5 +1,8 @@
 package com.example.backswim.pool.controller;
 
+import com.example.backswim.pool.apiresult.APIResult;
+import com.example.backswim.pool.apiresult.PoolDetailAPI;
+import com.example.backswim.pool.dto.PoolDetailDto;
 import com.example.backswim.pool.entity.PoolDetailEntity;
 import com.example.backswim.pool.error.PoolError;
 import com.example.backswim.pool.excetption.poolexception.PoolNotFoundException;
@@ -71,28 +74,33 @@ public class PoolDetailController {
 
 
     @GetMapping("/getpooldetail")
-    public ResponseEntity<PoolDetailEntity> getPoolDetail(GetPoolDetailParam getPoolDetailParam,HttpServletRequest request){
+    public APIResult<PoolDetailAPI> getPoolDetail(GetPoolDetailParam getPoolDetailParam, HttpServletRequest request){
 
         HttpHeaders header = new HttpHeaders();
-        PoolDetailEntity poolDetailEntity = null;
-
+        PoolDetailDto poolDetail = null;
+        PoolDetailAPI poolDetailAPI = new PoolDetailAPI();
         if(!getPoolDetailParam.checkStatus()){
-            return new ResponseEntity<>(null,header,HttpStatus.BAD_REQUEST);
+            return new APIResult<>(400,null,"BAD_REQUEST PARAMETER");
         }
         try{
-            poolDetailEntity = poolDetailService.GetPoolDetail(getPoolDetailParam);
-
+            poolDetail = poolDetailService.GetPoolDetail(getPoolDetailParam);
+            poolDetailAPI.setPoolDetail(poolDetail);
+            poolDetailAPI.setTotalCount(1);
 
         }catch(PoolNotFoundException e){
-            return new ResponseEntity<>(null,header,HttpStatus.BAD_REQUEST);
+            return new APIResult<>(400,null,"BAD REQUEST DATA NOT FOUND");
         }catch(Exception e){
-            return new ResponseEntity<>(null,header,HttpStatus.SERVICE_UNAVAILABLE);
+            logger.warn("요청 URL : {}",request.getRequestURL());
+            logger.warn("요청시간 : {}", LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss")));
+            logger.warn("클라이언트 IP : {}",request.getRemoteAddr());
+            logger.warn(e.getMessage());
+            return new APIResult<>(500,null,"SERVER ERROR");
         }
 
         logger.info("요청 URL : {}",request.getRequestURL());
         logger.info("요청시간 : {}", LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss")));
         logger.info("클라이언트 IP : {}",request.getRemoteAddr());
 
-        return new ResponseEntity<>(poolDetailEntity,header,HttpStatus.OK);
+        return new APIResult<>(200,poolDetailAPI,"OK");
     }
 }

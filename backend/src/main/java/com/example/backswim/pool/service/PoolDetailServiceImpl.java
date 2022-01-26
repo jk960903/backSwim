@@ -1,10 +1,11 @@
 package com.example.backswim.pool.service;
 
+import com.example.backswim.pool.dto.PoolDetailDto;
 import com.example.backswim.pool.entity.PoolDetailEntity;
 import com.example.backswim.pool.excetption.poolexception.PoolNotFoundException;
 import com.example.backswim.pool.params.GetPoolDetailParam;
-import com.example.backswim.pool.repository.PoolDetailRepostiory;
-import com.example.backswim.pool.repository.PoolRepository;
+import com.example.backswim.pool.params.repository.PoolDetailRepostiory;
+import com.example.backswim.pool.params.repository.PoolRepository;
 import lombok.RequiredArgsConstructor;
 import org.hibernate.annotations.common.util.impl.LoggerFactory;
 import org.jboss.logging.Logger;
@@ -22,7 +23,7 @@ public class PoolDetailServiceImpl implements PoolDetailService{
 
     private Logger logger = LoggerFactory.logger(this.getClass());
     @Override
-    public PoolDetailEntity GetPoolDetail(GetPoolDetailParam getPoolDetailParam) {
+    public PoolDetailDto GetPoolDetail(GetPoolDetailParam getPoolDetailParam) {
 
         Optional<PoolDetailEntity> optionalPoolDetailEntity = poolDetailRepostiory.findById(getPoolDetailParam.getId());
 
@@ -30,7 +31,9 @@ public class PoolDetailServiceImpl implements PoolDetailService{
             throw new PoolNotFoundException("NOT FOUND ID");
         }
 
-        return optionalPoolDetailEntity.get();
+
+
+        return PoolDetailDto.of(optionalPoolDetailEntity.get());
 
     }
 }

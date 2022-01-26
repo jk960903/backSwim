@@ -5,6 +5,7 @@ import lombok.*;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import java.time.LocalDateTime;
 
 @Entity
 @Builder
@@ -30,4 +31,8 @@ public class PoolEntity{
     private String addressName;
 
     private String phone;
+
+    private LocalDateTime regdate;
+
+    private LocalDateTime updateDate;
 }
