@@ -1,0 +1,29 @@
+@import url(../../root.css);
+
+:root {
+  /* Size */
+  --side-bar-width: 80px;
+  --side-bar-padding: 10px;
+  --side-bar-item-gap: 10px;
+  --side-bar-item-radius: 10px;
+}
+
+.side-bar {
+  width: var(--side-bar-width);
+  padding: var(--side-bar-padding);
+  display: flex;
+  flex-direction: column;
+}
+
+.side-bar > .side-bar-item {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  aspect-ratio: 1/1;
+  border-radius: var(--side-bar-item-radius);
+  white-space: pre-line;
+}
+
+.side-bar > .side-bar-item:not(:first-child) {
+  margin-top: var(--side-bar-item-gap);
+}

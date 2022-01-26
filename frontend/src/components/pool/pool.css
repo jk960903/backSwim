@@ -1,0 +1,9 @@
+@import url(../../root.css);
+
+:root {
+  /* Size */
+}
+
+.pool {
+  flex-grow: 2;
+}

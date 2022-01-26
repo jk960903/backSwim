@@ -1,8 +1,9 @@
 import React from 'react';
+import './pool.css';
 
 class Pool extends React.Component {
   render() {
-    return <h2>this is pool component</h2>;
+    return <div className="pool">this is pool content</div>;
   }
 }
 

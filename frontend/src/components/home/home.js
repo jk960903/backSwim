@@ -1,6 +1,9 @@
 import React from 'react';
 import Header from '../header/header.js';
 import Footer from '../footer/footer.js';
+import Pool from '../pool/pool.js';
+import SidedBar from '../sideBar/sideBar.js';
+import './home.css';
 
 class Home extends React.Component {
   constructor(props) {
@@ -14,6 +17,10 @@ class Home extends React.Component {
     return (
       <div>
         <Header isLogin={this.state.isLogin}></Header>
+        <div className="home-cotainer">
+          <SidedBar></SidedBar>
+          <Pool></Pool>
+        </div>
         <Footer></Footer>
       </div>
     );
