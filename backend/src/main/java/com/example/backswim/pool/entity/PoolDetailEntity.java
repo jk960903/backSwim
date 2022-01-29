@@ -46,11 +46,15 @@ public class PoolDetailEntity {
 
     private LocalTime sunClose;
 
-    private LocalTime regdate;
+    private LocalDateTime regdate;
 
     private Integer price;
 
     private LocalDateTime updateDate;
+
+    private Integer status;
+
+    private String url;
 
 
     @OneToOne(targetEntity = PoolEntity.class, fetch = FetchType.EAGER)

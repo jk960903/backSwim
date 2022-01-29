@@ -3,7 +3,8 @@ package com.example.backswim.pool.service;
 import com.example.backswim.pool.dto.PoolDto;
 import com.example.backswim.pool.entity.PoolEntity;
 import com.example.backswim.pool.model.FindPoolMap;
-import com.example.backswim.pool.params.repository.PoolRepository;
+import com.example.backswim.pool.params.SearchAddressParam;
+import com.example.backswim.pool.repository.PoolRepository;
 import com.example.backswim.pool.params.GetPoolMapParam;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -46,6 +47,32 @@ public class PoolServiceImpl implements PoolService{
                 .endLatitude(getPoolMapParam.getLatitude() + status) . build() ;
         List<PoolEntity> poolEntities = poolRepository.findByLongitudeBetweenAndLatitudeBetween(findPoolMap.getStartLongitude() , findPoolMap.getEndLongitude(),
                 findPoolMap.getStartLatitude(), findPoolMap.getEndLatitude());
+        return PoolDto.of(poolEntities);
+    }
+
+
+    @Override
+    public List<PoolDto> findPoolAddressList(SearchAddressParam param) {
+        String query = "";
+        if(!param.getFirstAddress().equals("")){
+            query += param.getFirstAddress();
+            if(!param.getSecondAddress().equals("")){
+                query +=" " + param.getSecondAddress();
+
+                if(!param.getThirdAddress().equals("")){
+                    query +=" " + param.getThirdAddress();
+
+                    if(!param.getFourthAddress().equals("")){
+                        query +=" " + param.getFourthAddress();
+
+                    }
+
+                }
+            }
+        }
+        List<PoolEntity> poolEntities = poolRepository.findByAddressNameContaining(query);
+
+
         return PoolDto.of(poolEntities);
     }
 }

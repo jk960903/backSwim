@@ -44,6 +44,10 @@ public class PoolDetailDto {
 
     private Integer price;
 
+    private Integer status;
+
+    private String url;
+
     public static PoolDetailDto of(PoolDetailEntity entity){
 
         PoolDetailDto poolDetailDto = PoolDetailDto.builder()
@@ -63,6 +67,8 @@ public class PoolDetailDto {
                 .sunClose(entity.getSunClose())
                 .sunOpen(entity.getSunOpen())
                 .price(entity.getPrice())
+                .status(entity.getStatus())
+                .url(entity.getUrl())
                 .build();
 
 
