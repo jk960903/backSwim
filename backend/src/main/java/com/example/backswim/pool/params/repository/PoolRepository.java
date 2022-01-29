@@ -1,4 +1,4 @@
-package com.example.backswim.pool.repository;
+package com.example.backswim.pool.params.repository;
 
 import com.example.backswim.pool.entity.PoolEntity;
 import com.example.backswim.pool.model.FindPoolMap;

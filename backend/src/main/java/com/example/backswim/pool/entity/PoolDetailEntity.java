@@ -4,6 +4,7 @@ import lombok.*;
 import org.apache.tomcat.jni.Local;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 
 @Getter
@@ -48,6 +49,8 @@ public class PoolDetailEntity {
     private LocalTime regdate;
 
     private Integer price;
+
+    private LocalDateTime updateDate;
 
 
     @OneToOne(targetEntity = PoolEntity.class, fetch = FetchType.EAGER)

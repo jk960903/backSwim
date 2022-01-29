@@ -1,8 +1,9 @@
 package com.example.backswim.pool.service;
 
+import com.example.backswim.pool.dto.PoolDto;
 import com.example.backswim.pool.entity.PoolEntity;
 import com.example.backswim.pool.model.FindPoolMap;
-import com.example.backswim.pool.repository.PoolRepository;
+import com.example.backswim.pool.params.repository.PoolRepository;
 import com.example.backswim.pool.params.GetPoolMapParam;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -35,7 +36,7 @@ public class PoolServiceImpl implements PoolService{
 
 
     @Override
-    public List<PoolEntity> findPoolListForMapLocate(GetPoolMapParam getPoolMapParam) {
+    public List<PoolDto> findPoolListForMapLocate(GetPoolMapParam getPoolMapParam) {
 
         Double status = 0.0001 * levelPerMulti[getPoolMapParam.getMapLevel() -1 ] / 2;
 
@@ -43,8 +44,8 @@ public class PoolServiceImpl implements PoolService{
                 .endLongitude(getPoolMapParam.getLongitude() + status)
                 .startLatitude(getPoolMapParam.getLatitude() - status)
                 .endLatitude(getPoolMapParam.getLatitude() + status) . build() ;
-
-        return poolRepository.findByLongitudeBetweenAndLatitudeBetween(findPoolMap.getStartLongitude() , findPoolMap.getEndLongitude(),
-                                                                        findPoolMap.getStartLatitude(), findPoolMap.getEndLatitude());
+        List<PoolEntity> poolEntities = poolRepository.findByLongitudeBetweenAndLatitudeBetween(findPoolMap.getStartLongitude() , findPoolMap.getEndLongitude(),
+                findPoolMap.getStartLatitude(), findPoolMap.getEndLatitude());
+        return PoolDto.of(poolEntities);
     }
 }

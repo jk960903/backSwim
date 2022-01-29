@@ -31,7 +31,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         http.csrf().disable();
 
         //보안사항 제외할 페이지 설정
-        http.authorizeRequests().antMatchers("/admin/makedatabaseset","/api/pool/getpoolmapforlocate").permitAll();
+        http.authorizeRequests().antMatchers("/admin/makedatabaseset","/api/pool/getpoolmapforlocate","/api/pooldetail/getpooldetail").permitAll();
 
         //http.formLogin()
         //        .loginPage("")
