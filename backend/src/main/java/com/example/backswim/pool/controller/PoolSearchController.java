@@ -3,9 +3,8 @@ package com.example.backswim.pool.controller;
 import com.example.backswim.pool.apiresult.APIResult;
 import com.example.backswim.pool.apiresult.PoolAPI;
 import com.example.backswim.pool.dto.PoolDto;
-import com.example.backswim.pool.error.ParamterError;
 import com.example.backswim.pool.error.PoolError;
-import com.example.backswim.pool.model.SearchQueryParameter;
+import com.example.backswim.pool.params.SearchQueryParameter;
 import com.example.backswim.pool.params.SearchAddressParam;
 import com.example.backswim.pool.service.PoolDetailService;
 import com.example.backswim.pool.service.PoolService;
@@ -32,6 +31,7 @@ public class PoolSearchController {
     private final PoolService poolService;
 
     private final PoolDetailService poolDetailService;
+
     @ExceptionHandler(BindException.class)
     public APIResult sampleError(HttpServletRequest request){
         PoolError error = new PoolError();
@@ -48,19 +48,21 @@ public class PoolSearchController {
 
     @GetMapping("/searchquery")
     public APIResult<?> SearchQuery(HttpServletRequest request , SearchQueryParameter parameter) throws Exception{
-
+        PoolAPI poolAPI = new PoolAPI();
         if(!parameter.checkStatus()){
             return new APIResult<>(400,null,"PARAMETER ERROR");
         }
 
+        List<PoolDto> poolDtoList = poolService.findPoolPlaceListForQuery(parameter);
+        poolAPI.setPool(poolDtoList);
+        poolAPI.setTotalCount(poolDtoList.size());
+
+        logger.info("요청 URL : {}",request.getRequestURL());
+        logger.info("요청시간 : {}", LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss")));
+        logger.info("클라이언트 IP : {}",request.getRemoteAddr());
 
 
-
-
-
-
-
-        return null;
+        return new APIResult<>(200,poolAPI,"OK");
     }
 
     @GetMapping("/searchaddress")
@@ -73,6 +75,10 @@ public class PoolSearchController {
         List<PoolDto> poolDtoList = poolService.findPoolAddressList(parameter);
         poolAPI.setPool(poolDtoList);
         poolAPI.setTotalCount(poolDtoList.size());
+
+        logger.info("요청 URL : {}",request.getRequestURL());
+        logger.info("요청시간 : {}", LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss")));
+        logger.info("클라이언트 IP : {}",request.getRemoteAddr());
 
         return new APIResult<>(200,poolAPI,"OK");
     }

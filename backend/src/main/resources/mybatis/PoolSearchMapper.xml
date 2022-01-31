@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.backswim.pool.mapper.PoolSearchMapper">
+
+    <select id="selectQueryPool" resultType="com.example.backswim.pool.entity.PoolEntity"
+            parameterType="com.example.backswim.pool.params.SearchQueryParameter" >
+
+        select * from pool_entity where trim_place_name rlike concat('',#{searchQuery},'') order by place_name;
+    </select>
+
+</mapper>

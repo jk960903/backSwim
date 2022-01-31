@@ -35,4 +35,6 @@ public class PoolEntity{
     private LocalDateTime regdate;
 
     private LocalDateTime updateDate;
+
+    private String trimPlaceName;
 }

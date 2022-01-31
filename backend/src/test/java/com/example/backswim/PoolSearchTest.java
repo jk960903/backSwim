@@ -175,7 +175,7 @@ public class PoolSearchTest {
 
     /**
      * 파라미터가 잘못되어 API 반환 오류
-     * Response 400 Data null
+     * Response 400 Parameter Error
      * @throws Exception
      */
     @Test
@@ -195,5 +195,118 @@ public class PoolSearchTest {
                 .andDo(print());
     }
 
+    /**
+     * 수영장 검색 API 초성이 문장 or 단어 검색
+     * runTime 7ms
+     * @throws Exception
+     */
+    @Test
+    public void PoolSearchQuerySuccessNoneChoSung() throws Exception{
+        String url = "http://localhost:8080/api/search/searchquery";
+
+        MultiValueMap<String ,String> map = new LinkedMultiValueMap<>();
+
+        map.add("inputQuery","강남");
+
+        mockMvc.perform(MockMvcRequestBuilders.get(url).params(map).contentType(MediaType.APPLICATION_JSON).characterEncoding("UTF-8"))
+                .andExpect(result ->{
+                            MockHttpServletResponse response = result.getResponse();
+                            response.getContentAsString().contains("\"statusCode\":200");
+                            response.getContentAsString().contains("\"data\": {");
+                        }
+                )
+                .andDo(print());
+    }
+
+    /**
+     * 수영장 검색 API 초성 검색
+     * runTime 57ms
+     * @throws Exception
+     */
+    @Test
+    public void PoolSearchQuerySuccessChoSung() throws Exception{
+        String url = "http://localhost:8080/api/search/searchquery";
+
+        MultiValueMap<String ,String> map = new LinkedMultiValueMap<>();
+
+        map.add("inputQuery","ㄱㄴ");
+
+        mockMvc.perform(MockMvcRequestBuilders.get(url).params(map).contentType(MediaType.APPLICATION_JSON).characterEncoding("UTF-8"))
+                .andExpect(result ->{
+                            MockHttpServletResponse response = result.getResponse();
+                            response.getContentAsString().contains("\"statusCode\":200");
+                            response.getContentAsString().contains("\"data\": {");
+                        }
+                )
+                .andDo(print());
+    }
+
+    /**
+     * 수영장 검색 API 글자와 초성이 섞였을 때의 검색
+     * runTime 5ms
+     * @throws Exception
+     */
+    @Test
+    public void PoolSearchQuerySuccessMix() throws Exception{
+        String url = "http://localhost:8080/api/search/searchquery";
+
+        MultiValueMap<String ,String> map = new LinkedMultiValueMap<>();
+
+        map.add("inputQuery","강ㄴ수");
+
+        mockMvc.perform(MockMvcRequestBuilders.get(url).params(map).contentType(MediaType.APPLICATION_JSON).characterEncoding("UTF-8"))
+                .andExpect(result ->{
+                            MockHttpServletResponse response = result.getResponse();
+                            response.getContentAsString().contains("\"statusCode\":200");
+                            response.getContentAsString().contains("\"data\": {");
+                        }
+                )
+                .andDo(print());
+    }
+
+    /**
+     * 수영장 검색 엔진 query에 아무것도 넣지 않음 즉 공백을 넣음
+     * runTime : 370ms
+     * @throws Exception
+     */
+    @Test
+    public void PoolSearchQueryNone() throws Exception{
+        String url = "http://localhost:8080/api/search/searchquery";
+
+        MultiValueMap<String ,String> map = new LinkedMultiValueMap<>();
+
+        map.add("inputQuery","");
+
+        mockMvc.perform(MockMvcRequestBuilders.get(url).params(map).contentType(MediaType.APPLICATION_JSON).characterEncoding("UTF-8"))
+                .andExpect(result ->{
+                            MockHttpServletResponse response = result.getResponse();
+                            response.getContentAsString().contains("\"statusCode\":200");
+                            response.getContentAsString().contains("\"data\": {");
+                        }
+                )
+                .andDo(print());
+    }
+
+    /**
+     * inputQuery 자체가 null 일경우 UnitTest 공백검색이아닌 정상적인 페이지에서의 요청이 아님
+     * runTime : 5ms
+     * @throws Exception
+     */
+    @Test
+    public void PoolSearchQueryNull() throws Exception{
+        String url = "http://localhost:8080/api/search/searchquery";
+
+        MultiValueMap<String ,String> map = new LinkedMultiValueMap<>();
+
+
+        mockMvc.perform(MockMvcRequestBuilders.get(url).params(map).contentType(MediaType.APPLICATION_JSON).characterEncoding("UTF-8"))
+                .andExpect(result ->{
+                            MockHttpServletResponse response = result.getResponse();
+                            response.getContentAsString().contains("\"statusCode\": 400");
+                            response.getContentAsString().contains("\"data\": null");
+                        }
+                )
+                .andDo(print());
+    }
 
 }

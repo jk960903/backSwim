@@ -35,6 +35,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 "/api/pool/getpoolmapforlocate",
                 "/api/pooldetail/getpooldetail",
                 "/api/search/searchquery",
+                "/admin/makechosung",
                 "/api/search/searchaddress").permitAll();
 
         //http.formLogin()

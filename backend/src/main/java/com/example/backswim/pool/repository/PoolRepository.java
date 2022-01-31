@@ -11,4 +11,5 @@ public interface PoolRepository extends JpaRepository<PoolEntity,String> {
     List<PoolEntity> findByLongitudeBetweenAndLatitudeBetween(Double startLongitude, Double endLongitude , Double startLatitude,Double endLatitude);
 
     List<PoolEntity> findByAddressNameContaining(String addressName);
+
 }

@@ -2,8 +2,10 @@ package com.example.backswim.pool.service;
 
 import com.example.backswim.pool.dto.PoolDto;
 import com.example.backswim.pool.entity.PoolEntity;
+import com.example.backswim.pool.mapper.PoolSearchMapper;
 import com.example.backswim.pool.model.FindPoolMap;
 import com.example.backswim.pool.params.SearchAddressParam;
+import com.example.backswim.pool.params.SearchQueryParameter;
 import com.example.backswim.pool.repository.PoolRepository;
 import com.example.backswim.pool.params.GetPoolMapParam;
 import lombok.RequiredArgsConstructor;
@@ -17,6 +19,7 @@ public class PoolServiceImpl implements PoolService{
 
     private final PoolRepository poolRepository;
 
+    private final PoolSearchMapper poolSearchMapper;
 
     private final int[] levelPerMulti = {30, 45 , 75 , 150 , 375 , 750 , 1500 , 3000 , 6000 , 12000 , 24000 , 48000 , 96000 , 192000} ;
 
@@ -72,6 +75,15 @@ public class PoolServiceImpl implements PoolService{
         }
         List<PoolEntity> poolEntities = poolRepository.findByAddressNameContaining(query);
 
+
+        return PoolDto.of(poolEntities);
+    }
+
+    @Override
+    public List<PoolDto> findPoolPlaceListForQuery(SearchQueryParameter param) {
+        param.makeQuery();
+
+        List<PoolEntity> poolEntities = poolSearchMapper.selectQueryPool(param);
 
         return PoolDto.of(poolEntities);
     }
