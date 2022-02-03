@@ -1,5 +1,6 @@
 package com.example.backswim.pool.params;
 
+import com.example.backswim.common.params.CheckInterface;
 import lombok.*;
 
 @Getter
@@ -7,7 +8,7 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class SearchAddressParam implements checkInterface{
+public class SearchAddressParam implements CheckInterface {
 
     private String firstAddress;
 
