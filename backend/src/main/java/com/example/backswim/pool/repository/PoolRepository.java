@@ -6,7 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
 
-public interface PoolRepository extends JpaRepository<PoolEntity,String> {
+public interface PoolRepository extends JpaRepository<PoolEntity,Long> {
 
     List<PoolEntity> findByLongitudeBetweenAndLatitudeBetween(Double startLongitude, Double endLongitude , Double startLatitude,Double endLatitude);
 

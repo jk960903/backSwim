@@ -2,6 +2,7 @@ package com.example.backswim.pool.service;
 
 import com.example.backswim.pool.dto.PoolDto;
 import com.example.backswim.pool.entity.PoolEntity;
+import com.example.backswim.pool.excetption.poolexception.PoolNotFoundException;
 import com.example.backswim.pool.mapper.PoolSearchMapper;
 import com.example.backswim.pool.model.FindPoolMap;
 import com.example.backswim.pool.params.SearchAddressParam;
@@ -9,9 +10,11 @@ import com.example.backswim.pool.params.SearchQueryParameter;
 import com.example.backswim.pool.repository.PoolRepository;
 import com.example.backswim.pool.params.GetPoolMapParam;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -22,6 +25,17 @@ public class PoolServiceImpl implements PoolService{
     private final PoolSearchMapper poolSearchMapper;
 
     private final int[] levelPerMulti = {30, 45 , 75 , 150 , 375 , 750 , 1500 , 3000 , 6000 , 12000 , 24000 , 48000 , 96000 , 192000} ;
+
+    @Override
+    public PoolDto findPoolById(long id) {
+        Optional<PoolEntity> optionPoolEntity = poolRepository.findById(id);
+
+        if(optionPoolEntity.isEmpty()){
+            throw new PoolNotFoundException("CAN NOT FIND POOL");
+        }
+
+        return PoolDto.of(optionPoolEntity.get(),1);
+    }
 
     /**
      * 위도별 경도의 범위가 다르지만 우리나라 위도 33~38.xx 를 참조하여 약 35도 적용
@@ -80,6 +94,7 @@ public class PoolServiceImpl implements PoolService{
     }
 
     @Override
+    @Cacheable(value = "poolquery" , key = "#param.inputQuery")
     public List<PoolDto> findPoolPlaceListForQuery(SearchQueryParameter param) {
         param.makeQuery();
 
