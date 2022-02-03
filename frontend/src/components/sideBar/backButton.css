@@ -1,0 +1,21 @@
+@import url(../../root.css);
+
+:root {
+  /* Size */
+  --back-btn-size: 0.7rem;
+}
+
+.back-btn-container {
+  display: flex;
+  align-items: flex-start;
+}
+
+.back-btn {
+  position: relative;
+  top: var(--back-btn-size);
+  left: -50%;
+  font-size: var(--back-btn-size);
+  background-color: var(--half-sky-color);
+  border-radius: 50%;
+  aspect-ratio: 1/1;
+}

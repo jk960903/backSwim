@@ -1,0 +1,54 @@
+@import url(../../root.css);
+
+:root {
+  /* Size */
+  --side-bar-text-width: 250px;
+  --side-bar-search-bar-input-padding: 5px;
+  --side-bar-search-list-padding: 5px;
+  --side-bar-search-list-height: 200px;
+}
+
+.side-bar-text {
+  width: var(--side-bar-text-width);
+  padding: var(--side-bar-padding);
+  display: flex;
+  flex-direction: column;
+  background-color: white;
+}
+
+.side-bar-search-bar {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.side-bar-search-bar > i {
+  font-size: 1.1rem;
+  margin-right: 10px;
+}
+
+.side-bar-search-bar > input {
+  width: 100%;
+  border: var(--default-border);
+  padding: var(--side-bar-search-bar-input-padding);
+}
+
+.side-bar-search-list {
+  margin-top: 5px;
+  display: flex;
+  flex-direction: column;
+  border: var(--default-border);
+  border-radius: 5px;
+  padding: var(--side-bar-search-list-padding);
+  height: var(--side-bar-search-list-height);
+  overflow-y: auto;
+}
+
+.side-bar-search-list > div:not(:last-child) {
+  margin-bottom: 5px;
+}
+
+.side-bar-search-list > div:hover {
+  background-color: var(--sky-color);
+  border-radius: 3px;
+}

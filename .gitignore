@@ -26,6 +26,7 @@ chrome-user-data
 *.swp
 *.swo
 jest_result.txt
+private/
 
 packages/react-devtools-core/dist
 packages/react-devtools-extensions/chrome/build

@@ -17,7 +17,7 @@ class Home extends React.Component {
     return (
       <div>
         <Header isLogin={this.state.isLogin}></Header>
-        <div className="home-cotainer">
+        <div className="home-container">
           <SidedBar></SidedBar>
           <Pool></Pool>
         </div>

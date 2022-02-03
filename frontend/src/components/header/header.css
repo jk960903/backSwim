@@ -1,47 +1,53 @@
 @import url(../../root.css);
 
 :root {
-    /* Size */
-    --header-height-size: 50px;
-    --header-padding-size: 10px;
-    --header-item-margin-left: 10px; 
-    --header-item-min-size: 60px;
+  /* Size */
+  --header-height-size: 50px;
+  --header-padding-size: 10px;
+  --header-item-margin-left: 10px;
+  --header-item-min-size: 60px;
+
+  /* etc */
+  --header-box-shadow: 0px 1px 5px var(--sky-color);
 }
 
 .header {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    height: var(--header-height-size);
-    padding: var(--header-padding-size);
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  height: var(--header-height-size);
+  padding: var(--header-padding-size);
+  box-shadow: var(--header-box-shadow);
+  position: relative;
+  z-index: 999;
 }
 
 .header-logo-link {
-    text-decoration: none;
-    color: black;
-    display: flex;
+  text-decoration: none;
+  color: black;
+  display: flex;
 }
 
 .header-logo {
-    font-size: 2rem;
-    cursor: pointer;
-    height: inherit;
+  font-size: 2rem;
+  cursor: pointer;
+  height: inherit;
 }
 
 .header-item-container {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: center;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
 }
 
 .header-item-container > .item {
-    text-align: center;
-    min-width: var(--header-item-min-size);
-    text-decoration: none;
-    color: black;
+  text-align: center;
+  min-width: var(--header-item-min-size);
+  text-decoration: none;
+  color: black;
 }
 
 .header-item-container > .item:not(:first-child) {
-    margin-left: var(--header-item-margin-left);
+  margin-left: var(--header-item-margin-left);
 }
