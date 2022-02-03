@@ -30,7 +30,7 @@ public class PoolDto {
 
     private Integer seq;
 
-    public static PoolDto of(PoolEntity entity,int seq){
+    public static PoolDto of(PoolEntity entity , int seq){
         PoolDto poolDto = PoolDto.builder()
                 .id(entity.getId())
                 .addressName(entity.getAddressName())
@@ -41,6 +41,7 @@ public class PoolDto {
                 .phone(entity.getPhone())
                 .seq(seq)
                 .build();
+
         return poolDto;
     }
 
