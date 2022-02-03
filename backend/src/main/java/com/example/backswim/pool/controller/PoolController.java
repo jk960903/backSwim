@@ -1,9 +1,9 @@
 package com.example.backswim.pool.controller;
 
 import com.example.backswim.common.controller.CommonController;
-import com.example.backswim.pool.apiresult.APIResult;
+import com.example.backswim.common.api.APIResult;
 import com.example.backswim.pool.apiresult.PoolAPI;
-import com.example.backswim.pool.apiresult.enums.StatusEnum;
+import com.example.backswim.common.api.enums.StatusEnum;
 import com.example.backswim.pool.dto.PoolDto;
 import com.example.backswim.pool.params.GetPoolMapParam;
 import com.example.backswim.pool.service.PoolService;

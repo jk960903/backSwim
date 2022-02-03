@@ -1,6 +1,6 @@
 package com.example.backswim.pool.params;
 
-import com.example.backswim.pool.params.checkInterface;
+import com.example.backswim.common.params.CheckInterface;
 import lombok.*;
 
 import java.util.HashMap;
@@ -11,7 +11,7 @@ import java.util.Map;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class SearchQueryParameter implements checkInterface {
+public class SearchQueryParameter implements CheckInterface {
 
     private String inputQuery;
 

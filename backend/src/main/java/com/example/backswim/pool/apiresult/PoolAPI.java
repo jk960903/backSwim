@@ -1,5 +1,6 @@
 package com.example.backswim.pool.apiresult;
 
+import com.example.backswim.common.api.CommonAPI;
 import com.example.backswim.pool.dto.PoolDto;
 import lombok.*;
 
@@ -8,7 +9,7 @@ import java.util.List;
 @Getter
 @Setter
 @NoArgsConstructor
-public class PoolAPI extends CommonAPI{
+public class PoolAPI extends CommonAPI {
 
     List<PoolDto> pool;
 

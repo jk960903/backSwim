@@ -1,6 +1,6 @@
 package com.example.backswim;
 
-import com.example.backswim.pool.apiresult.enums.StatusEnum;
+import com.example.backswim.common.api.enums.StatusEnum;
 import com.example.backswim.pool.params.SearchAddressParam;
 
 
@@ -91,7 +91,6 @@ public class PoolSearchTest {
     /**
      * 파라미터가 아무것도 들어오지 않을때 (null 처리가 아닌 공백처리 즉 사용자가 아무런 지역을 입력하지 않음)
      * 전체검색
-     * @param addresses
      */
     @DisplayName("파라미터 들어오지 않아 Address Non Param (전체 검색")
     @ParameterizedTest(name="/api/search/searchaddress")
