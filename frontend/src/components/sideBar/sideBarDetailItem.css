@@ -1,0 +1,50 @@
+@import url(../../root.css);
+@import url(./sideBarText.css);
+
+:root {
+  --detail-item-gap: 5px;
+  --detail-item-gap-large: 10px;
+  --detail-item-height: 150px;
+}
+
+.detail-item {
+  display: flex;
+  flex-direction: column;
+  border: var(--default-border);
+  border-radius: 10px;
+  padding: var(--side-bar-padding);
+  width: 100%;
+  height: var(--detail-item-height);
+  justify-content: center;
+}
+
+.detail-item:hover {
+  background-color: var(--sky-color);
+}
+
+.detail-item > :not(:last-child) {
+  margin-bottom: var(--detail-item-gap);
+}
+
+.detail-name {
+  font-size: 1rem;
+}
+
+.detail-container {
+  display: flex;
+  flex-direction: row;
+}
+
+.detail-container > :not(:last-child) {
+  margin-right: var(--detail-item-gap-large);
+}
+
+.detail-url {
+  font-size: 0.6rem;
+}
+
+.detail-text-overflow {
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+}

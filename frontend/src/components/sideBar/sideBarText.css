@@ -13,7 +13,7 @@
   padding: var(--side-bar-padding);
   display: flex;
   flex-direction: column;
-  background-color: white;
+  background-color: var(--white-color);
 }
 
 .side-bar-search-bar {

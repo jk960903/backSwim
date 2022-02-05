@@ -1,5 +1,6 @@
 :root {
   /* color */
+  --white-color: #ffffffff;
   --grey-color: #f2f2f2;
   --sky-color: #87cefa;
   --half-sky-color: rgb(135, 206, 250, 0.8);

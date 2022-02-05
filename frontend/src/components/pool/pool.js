@@ -1,6 +1,9 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import './pool.css';
 import MyRequest from '../../common/myRequest';
+import { EXT } from '../../common/myTypes';
+import { GeolocationNode, PoolNode, PoolDetailNode } from '../../common/myNodes';
 
 const { kakao } = window;
 const markerImgSrc = 'https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/markerStar.png';
@@ -8,83 +11,96 @@ const defaultLat = 37.2253;
 const defaultLng = 127.0701;
 const defaultMapLv = 6;
 
-function GeolocationNode(latitude, longitude, mapLevel) {
-  Object.assign(this, { latitude, longitude, mapLevel });
-}
-
-function PoolNode({ id, placeName, roadAddressName, latitude, longitude, phone }) {
-  Object.assign(this, {
-    id,
-    placeName,
-    roadAddressName,
-    latitude,
-    longitude,
-    phone,
-  });
-}
-
-class Pool extends React.Component {
+export default class Pool extends React.Component {
   map = null;
+  markers = new Map();
 
   constructor(props) {
     super(props);
     this.state = {
       curGeo: new GeolocationNode(defaultLat, defaultLng, defaultMapLv),
-      poolList: [],
+      poolMap: new Map(), // 지도에 표시되는 수영장 Map
     };
   }
 
-  marking(placeName, latitude, longitude) {
+  componentDidUpdate(preProps, preStates) {
+    if (preStates.curGeo !== this.state.curGeo) {
+      const curGeo = this.state.curGeo;
+      /* TODO: 너무 많은 마커에 대한 최적화 필요 */
+      this.getPoolsAndMarking(curGeo.latitude, curGeo.longitude, curGeo.mapLevel);
+    }
+  }
+
+  marking(pool, latitude, longitude) {
+    /* 기존에 마킹 했다면 스킵 */
+    if (this.markers.has(pool.placeName) === true) return;
+
+    this.markers.set(pool.placeName, true);
+
     // marking
     const imageSize = new kakao.maps.Size(24, 35);
     const markerImage = new kakao.maps.MarkerImage(markerImgSrc, imageSize);
     const marker = new kakao.maps.Marker({
       map: this.map, // 마커를 표시할 지도
       position: new kakao.maps.LatLng(latitude, longitude), // 마커를 표시할 위치
-      title: placeName, // 마커의 타이틀, 마커에 마우스를 올리면 타이틀이 표시됩니다
+      title: pool.placeName, // 마커의 타이틀, 마커에 마우스를 올리면 타이틀이 표시됩니다
       image: markerImage, // 마커 이미지
     });
 
-    // adding event listener
-
-    function markerClickListener(placeName) {
+    /* 마커 클릭 이벤트 핸들러*/
+    function markerClickListener(pool, lat, lng) {
       return function () {
-        console.log(placeName);
+        const curGeo = this.state.curGeo;
+        this.moveMapByLatLng(lat, lng, curGeo.mapLevel);
+
+        /* TODO: 에러처리 필요 */
+        /* TODO: loading 페이지 필요 */
+        MyRequest.getPoolDetailById(pool.id).then((res) => {
+          const poolDetail = new PoolDetailNode(res.data.poolDetail);
+          this.props.setCur(EXT.DETAIL, pool, poolDetail);
+        });
       };
     }
 
-    kakao.maps.event.addListener(marker, 'click', markerClickListener(placeName));
+    kakao.maps.event.addListener(
+      marker,
+      'click',
+      markerClickListener(pool, latitude, longitude).bind(this)
+    );
   }
 
   getPoolsAndMarking(latitude, longitude, mapLevel) {
-    const poolList = this.state.poolList;
+    const poolMap = this.state.poolMap;
     MyRequest.getPoolsByGeoLocation(latitude, longitude, mapLevel)
       .then((res) => {
         for (const pool of res.data.pool) {
-          poolList.push(new PoolNode(pool));
+          if (poolMap.has(pool.id) === false) {
+            poolMap.set(pool.id, new PoolNode(pool));
+          }
         }
       })
       .then(() => {
-        for (const pool of poolList) {
-          this.marking(pool.placeName, pool.latitude, pool.longitude);
+        for (const [, value] of poolMap) {
+          this.marking(value, value.latitude, value.longitude);
         }
       });
   }
 
+  /* 해당 위치를 중심으로 지도를 옮깁니다. */
+  moveMapByLatLng(lat, lng, mapLevel) {
+    this.map.setCenter(new kakao.maps.LatLng(lat, lng));
+    this.setState({
+      curGeo: new GeolocationNode(lat, lng, mapLevel),
+    });
+  }
+
+  /* 현대 위도 경도를 가져옵니다. */
   moveCurrentGeolocation() {
     function success(pos) {
       const curGeo = this.state.curGeo;
       const crd = pos.coords;
 
-      // move center to current location
-      this.map.setCenter(new kakao.maps.LatLng(crd.latitude, crd.longitude));
-
-      // getting the pools on current location and marking
-      this.getPoolsAndMarking(crd.latitude, crd.longitude, curGeo.mapLevel);
-
-      this.setState({
-        curGeo: new GeolocationNode(crd.latitude, crd.longitude, curGeo.mapLevel),
-      });
+      this.moveMapByLatLng(crd.latitude, crd.longitude, curGeo.mapLevel);
     }
 
     function error(err) {
@@ -103,6 +119,28 @@ class Pool extends React.Component {
     };
 
     this.map = new kakao.maps.Map(container, options);
+
+    /* 드래그 이벤트 핸들러 등록 */
+    function mapDragEventListener() {
+      const curGeo = this.state.curGeo;
+      const latlng = this.map.getCenter();
+
+      this.moveMapByLatLng(latlng.getLat(), latlng.getLng(), curGeo.mapLevel);
+    }
+
+    kakao.maps.event.addListener(this.map, 'dragend', mapDragEventListener.bind(this));
+
+    /* zoom 이벤트 핸들러 등록 */
+    const zoomControl = new kakao.maps.ZoomControl();
+    this.map.addControl(zoomControl, kakao.maps.ControlPosition.RIGHT);
+    function mapZoomEventListener() {
+      const curGeo = this.state.curGeo;
+      const mapLevel = this.map.getLevel();
+
+      this.moveMapByLatLng(curGeo.latitude, curGeo.longitude, mapLevel);
+    }
+
+    kakao.maps.event.addListener(this.map, 'zoom_changed', mapZoomEventListener.bind(this));
   }
 
   componentDidMount() {
@@ -111,8 +149,11 @@ class Pool extends React.Component {
   }
 
   render() {
+    console.log('Rendering: Pool');
     return <div id="map" sytle="width:500px;height:400px;" className="pool"></div>;
   }
 }
 
-export default Pool;
+Pool.propTypes = {
+  setCur: PropTypes.func.isRequired,
+};

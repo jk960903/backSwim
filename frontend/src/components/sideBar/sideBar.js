@@ -1,65 +1,51 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import './sideBar.css';
 import SideBarText from './sideBarText';
 import SideBarLocation from './sideBarLocation';
 import SideBarFavorite from './sideBarFavorite';
+import SideBarDetail from './sideBarDetail';
 import BackButton from './backButton';
+import { PoolNode, PoolDetailNode } from '../../common/myNodes';
+import { EXT } from '../../common/myTypes';
 
 function SideBarItem(text, id, handler) {
   Object.assign(this, { text, id, handler });
 }
 
-const EXT = Object.freeze({
-  NONE: Symbol('none'),
-  TEXT: Symbol('text'),
-  LOCATION: Symbol('location'),
-  FAVORITE: Symbol('favorite'),
-});
-
-export default class SidedBar extends Component {
+export default class SideBar extends Component {
   constructor(props) {
     super(props);
-    this.state = {
-      curExt: EXT.NONE,
-      slide: true,
-    };
   }
 
   handlerSideBarButton(targetExt) {
-    let nxtSlide = false;
-    if (this.state.curExt !== targetExt) {
-      nxtSlide = true;
-    }
-
-    this.setState({
-      curExt: targetExt,
-      slide: nxtSlide,
-    });
+    this.props.setCurExt(targetExt);
   }
 
   handlerBackBtnClick() {
-    this.setState({
-      curExt: EXT.NONE,
-      slide: true,
-    });
+    this.props.setCurExt(EXT.NONE);
   }
 
   renderSideBarExt() {
-    const curExt = this.state.curExt;
-    const slide = this.state.slide;
+    const curExt = this.props.curExt;
 
     if (curExt === EXT.NONE) return;
 
-    const classList = slide === true ? 'side-bar-ext-container slide' : 'side-bar-ext-container';
+    const classList = 'side-bar-ext-container slide';
 
     return (
-      <div id="test" className={classList} onAnimationEnd={() => this.setState({ slide: false })}>
+      <div className={classList}>
         {curExt === EXT.TEXT ? (
           <SideBarText></SideBarText>
         ) : curExt === EXT.LOCATION ? (
           <SideBarLocation></SideBarLocation>
-        ) : (
+        ) : curExt === EXT.FAVORITE ? (
           <SideBarFavorite></SideBarFavorite>
+        ) : (
+          <SideBarDetail
+            curPool={this.props.curPool}
+            curPoolDetail={this.props.curPoolDetail}
+          ></SideBarDetail>
         )}
         <BackButton clickHandler={() => this.handlerBackBtnClick()}></BackButton>
       </div>
@@ -85,6 +71,7 @@ export default class SidedBar extends Component {
   }
 
   render() {
+    console.log('Rendering: SideBar');
     return (
       <div className="side-bar">
         {this.renderSideBarButtons()}
@@ -93,3 +80,10 @@ export default class SidedBar extends Component {
     );
   }
 }
+
+SideBar.propTypes = {
+  setCurExt: PropTypes.func.isRequired,
+  curExt: PropTypes.symbol.isRequired,
+  curPool: PropTypes.instanceOf(PoolNode),
+  curPoolDetail: PropTypes.instanceOf(PoolDetailNode),
+};

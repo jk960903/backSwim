@@ -1,0 +1,11 @@
+@import url(../../root.css);
+@import url(./sideBarText.css);
+@import url(../home/home.css);
+
+.side-bar-detail {
+  display: flex;
+  width: var(--side-bar-text-width);
+  padding: var(--side-bar-padding);
+  height: var(--home-height);
+  background-color: var(--white-color);
+}

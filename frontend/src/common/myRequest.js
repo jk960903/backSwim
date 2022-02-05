@@ -25,7 +25,7 @@ const MyRequest = (() => {
         return data;
       })
       .catch((err) => {
-        console.log(err);
+        console.error(err);
       });
   }
 
@@ -43,9 +43,17 @@ const MyRequest = (() => {
     return requestToServer(url, option);
   }
 
+  function getPoolDetailById(id) {
+    const params = '?' + new URLSearchParams({ id }).toString();
+    const url = host + '/pooldetail/getpooldetail' + params;
+    const option = { ...defaultOption };
+    return requestToServer(url, option);
+  }
+
   return {
     getPoolsByGeoLocation: getPoolsByGeoLocation,
     getPoolsByName: getPoolsByName,
+    getPoolDetailById: getPoolDetailById,
   };
 })();
 
