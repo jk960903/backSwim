@@ -1,6 +1,5 @@
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
-import { PoolNode, PoolDetailNode } from '../../common/myNodes';
 import SideBarDetailItem from './sideBarDetailItem';
 import './sideBarDetail.css';
 
@@ -10,13 +9,26 @@ export class SideBarDetail extends Component {
   }
 
   render() {
+    const poolList = this.props.poolList;
+    const poolDetailList = this.props.poolDetailList;
+    console.log(poolList);
+    console.log(poolList.length);
+
     console.log('Rendering: SideBarDetail');
     return (
       <div className="side-bar-detail">
-        <SideBarDetailItem
-          curPool={this.props.curPool}
-          curPoolDetail={this.props.curPoolDetail}
-        ></SideBarDetailItem>
+        {poolList.map((value, idx) => {
+          console.log(poolDetailList[idx]);
+          if (poolDetailList[idx] === undefined) return;
+
+          return (
+            <SideBarDetailItem
+              key={idx}
+              pool={value}
+              poolDetail={poolDetailList[idx]}
+            ></SideBarDetailItem>
+          );
+        })}
       </div>
     );
   }
@@ -25,6 +37,6 @@ export class SideBarDetail extends Component {
 export default SideBarDetail;
 
 SideBarDetail.propTypes = {
-  curPool: PropTypes.instanceOf(PoolNode),
-  curPoolDetail: PropTypes.instanceOf(PoolDetailNode),
+  poolList: PropTypes.array.isRequired,
+  poolDetailList: PropTypes.array.isRequired,
 };

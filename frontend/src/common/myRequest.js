@@ -50,10 +50,19 @@ const MyRequest = (() => {
     return requestToServer(url, option);
   }
 
+  // prettier-ignore
+  function getPoolListByLocation(firstAddress="", secondAddress="", thirdAddress="", fourthAddress="") {
+    const params = '?' + new URLSearchParams({ firstAddress, secondAddress, thirdAddress, fourthAddress }).toString();
+    const url = host + '/search/searchaddress' + params;
+    const option = { ...defaultOption };
+    return requestToServer(url, option);
+  }
+
   return {
     getPoolsByGeoLocation: getPoolsByGeoLocation,
     getPoolsByName: getPoolsByName,
     getPoolDetailById: getPoolDetailById,
+    getPoolListByLocation: getPoolListByLocation,
   };
 })();
 

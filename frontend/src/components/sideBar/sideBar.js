@@ -37,14 +37,14 @@ export default class SideBar extends Component {
       <div className={classList}>
         {curExt === EXT.TEXT ? (
           <SideBarText></SideBarText>
-        ) : curExt === EXT.LOCATION ? (
+        ) : curExt === EXT.LOCATION_SI ? (
           <SideBarLocation></SideBarLocation>
         ) : curExt === EXT.FAVORITE ? (
           <SideBarFavorite></SideBarFavorite>
         ) : (
           <SideBarDetail
-            curPool={this.props.curPool}
-            curPoolDetail={this.props.curPoolDetail}
+            poolList={[this.props.curPool]}
+            poolDetailList={[this.props.curPoolDetail]}
           ></SideBarDetail>
         )}
         <BackButton clickHandler={() => this.handlerBackBtnClick()}></BackButton>
@@ -55,7 +55,7 @@ export default class SideBar extends Component {
   renderSideBarButtons() {
     const buttons = [
       new SideBarItem('검색', 'search', this.handlerSideBarButton.bind(this, EXT.TEXT)),
-      new SideBarItem('지역', 'location', this.handlerSideBarButton.bind(this, EXT.LOCATION)),
+      new SideBarItem('지역', 'location', this.handlerSideBarButton.bind(this, EXT.LOCATION_SI)),
       new SideBarItem('즐겨\n찾기', 'favorite', this.handlerSideBarButton.bind(this, EXT.FAVORITE)),
     ];
 

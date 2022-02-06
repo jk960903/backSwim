@@ -48,3 +48,7 @@ code {
 input {
   border-radius: 5px;
 }
+
+.click {
+  background-color: var(--sky-color);
+}

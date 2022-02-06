@@ -120,6 +120,9 @@ export default class Pool extends React.Component {
 
     this.map = new kakao.maps.Map(container, options);
 
+    /* kakao copyright 위치 */
+    this.map.setCopyrightPosition(kakao.maps.CopyrightPosition.BOTTOMRIGHT, true);
+
     /* 드래그 이벤트 핸들러 등록 */
     function mapDragEventListener() {
       const curGeo = this.state.curGeo;
@@ -132,7 +135,7 @@ export default class Pool extends React.Component {
 
     /* zoom 이벤트 핸들러 등록 */
     const zoomControl = new kakao.maps.ZoomControl();
-    this.map.addControl(zoomControl, kakao.maps.ControlPosition.RIGHT);
+    this.map.addControl(zoomControl, kakao.maps.ControlPosition.BOTTOMRIGHT);
     function mapZoomEventListener() {
       const curGeo = this.state.curGeo;
       const mapLevel = this.map.getLevel();

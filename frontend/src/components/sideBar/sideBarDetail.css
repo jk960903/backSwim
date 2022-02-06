@@ -2,10 +2,20 @@
 @import url(./sideBarText.css);
 @import url(../home/home.css);
 
+:root {
+  --side-bar-detail-gap: 10px;
+}
+
 .side-bar-detail {
   display: flex;
+  flex-direction: column;
   width: var(--side-bar-text-width);
   padding: var(--side-bar-padding);
   height: var(--home-height);
   background-color: var(--white-color);
+  align-items: center;
+}
+
+.side-bar-detail > *:not(:last-child) {
+  margin-bottom: var(--side-bar-detail-gap);
 }

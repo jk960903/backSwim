@@ -1,6 +1,5 @@
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
-import { PoolNode, PoolDetailNode } from '../../common/myNodes';
 import MyTime from '../../utils/myTime';
 import './sideBarDetailItem.css';
 
@@ -12,8 +11,6 @@ export default class SideBarDetailItem extends Component {
   isOpen(poolDetail) {
     const [curDay, curTime] = [MyTime.getCurDay(), MyTime.getCurTime()];
     let ret = false;
-    console.log(poolDetail);
-    console.log({ curDay, curTime });
     switch (curDay) {
       case 0:
         if (
@@ -79,26 +76,26 @@ export default class SideBarDetailItem extends Component {
   }
 
   render() {
-    const curPool = this.props.curPool;
-    const curPoolDetail = this.props.curPoolDetail;
-    const isOpen = this.isOpen(curPoolDetail);
+    const pool = this.props.pool;
+    const poolDetail = this.props.poolDetail;
+    const isOpen = this.isOpen(poolDetail);
     console.log('Rendering: SideBarDetailItem');
 
     return (
       <div className="detail-item">
-        <div className="detail-name detail-text-overflow">{curPool.placeName}</div>
+        <div className="detail-name detail-text-overflow">{pool.placeName}</div>
         <div className="detail-container">
           <div className="detail-phone-img">
             <i className="fas fa-phone-alt"></i>
           </div>
-          <div className="detail-phone">{curPool.phone.length === 0 ? '-' : curPool.phone}</div>
+          <div className="detail-phone">{pool.phone.length === 0 ? '-' : pool.phone}</div>
         </div>
         <div className="detail-container">
           <div className="detail-location-img">
             <i className="fas fa-map-marker-alt"></i>
           </div>
           <div className="detail-location">
-            {curPool.roadAddressName.length === 0 ? '-' : curPool.roadAddressName}
+            {pool.roadAddressName.length === 0 ? '-' : pool.roadAddressName}
           </div>
         </div>
         <div className="detail-container">
@@ -111,15 +108,15 @@ export default class SideBarDetailItem extends Component {
           <div className="detail-cost-img">
             <i className="fas fa-won-sign"></i>
           </div>
-          <div className="detail-cost">{curPoolDetail.price}</div>
+          <div className="detail-cost">{poolDetail.price}</div>
         </div>
-        <div className="detail-url detail-text-overflow">{curPoolDetail.url}</div>
+        <div className="detail-url detail-text-overflow">{poolDetail.url}</div>
       </div>
     );
   }
 }
 
 SideBarDetailItem.propTypes = {
-  curPool: PropTypes.instanceOf(PoolNode),
-  curPoolDetail: PropTypes.instanceOf(PoolDetailNode),
+  pool: PropTypes.object.isRequired,
+  poolDetail: PropTypes.object.isRequired,
 };
