@@ -1,10 +1,10 @@
 import React from 'react';
-import Header from '../header/header.js';
-import Footer from '../footer/footer.js';
-import Pool from '../pool/pool.js';
-import SideBar from '../sideBar/sideBar.js';
+import Header from 'Components/header/header.js';
+import Footer from 'Components/footer/footer.js';
+import Pool from 'Components/pool/pool.js';
+import SideBar from 'Components/sideBar/sideBar.js';
 import './home.css';
-import { EXT } from '../../common/myTypes.js';
+import { EXT } from 'Common/myTypes.js';
 
 class Home extends React.Component {
   constructor(props) {

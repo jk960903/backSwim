@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import './sideBarText.css';
-import MyRequest from '../../common/myRequest';
-import debounce from '../../utils/debounce';
+import MyRequest from 'Common/myRequest';
+import debounce from 'Utils/debounce';
 
 export default class SideBarText extends Component {
   constructor(props) {

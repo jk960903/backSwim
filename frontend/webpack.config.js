@@ -53,4 +53,11 @@ module.exports = {
       filename: 'index.html',
     }),
   ],
+  resolve: {
+    alias: {
+      Components: path.resolve(__dirname, 'src/components/'),
+      Common: path.resolve(__dirname, 'src/common/'),
+      Utils: path.resolve(__dirname, 'src/utils/'),
+    },
+  },
 };

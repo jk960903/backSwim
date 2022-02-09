@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
-import MyTime from '../../utils/myTime';
+import MyTime from 'Utils/myTime';
 import './sideBarDetailItem.css';
 
 export default class SideBarDetailItem extends Component {

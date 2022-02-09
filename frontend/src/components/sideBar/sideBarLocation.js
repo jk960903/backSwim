@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import './sideBarLocation.css';
-import { locationList } from '../../common/myNodes';
+import { locationList } from 'Common/myNodes';
 import SideBarDetail from './sideBarDetail';
-import MyRequest from '../../common/myRequest';
+import MyRequest from 'Common/myRequest';
 
 export default class SideBarLocation extends Component {
   poolList = [];

@@ -1,13 +1,13 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import './sideBar.css';
-import SideBarText from './sideBarText';
-import SideBarLocation from './sideBarLocation';
-import SideBarFavorite from './sideBarFavorite';
-import SideBarDetail from './sideBarDetail';
-import BackButton from './backButton';
-import { PoolNode, PoolDetailNode } from '../../common/myNodes';
-import { EXT } from '../../common/myTypes';
+import SideBarText from 'Components/sideBar/sideBarText';
+import SideBarLocation from 'Components/sideBar/sideBarLocation';
+import SideBarFavorite from 'Components/sideBar/sideBarFavorite';
+import SideBarDetail from 'Components/sideBar/sideBarDetail';
+import BackButton from 'Components/sideBar/backButton';
+import { PoolNode, PoolDetailNode } from 'Common/myNodes';
+import { EXT } from 'Common/myTypes';
 
 function SideBarItem(text, id, handler) {
   Object.assign(this, { text, id, handler });

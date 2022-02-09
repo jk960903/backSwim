@@ -1,10 +1,10 @@
 import React from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import Home from './components/home/home.js';
-import SignIn from './components/signIn/signIn.js';
-import SignUp from './components/signUp/signUp.js';
-import MyPage from './components/myPage/myPage.js';
-import NotFound from './components/notFound/notFound';
+import Home from 'Components/home/home.js';
+import SignIn from 'Components/signIn/signIn.js';
+import SignUp from 'Components/signUp/signUp.js';
+import MyPage from 'Components/myPage/myPage.js';
+import NotFound from 'Components/notFound/notFound';
 
 class App extends React.Component {
   constructor(props) {
