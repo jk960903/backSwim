@@ -3,6 +3,7 @@ package com.example.backswim.pool.controller;
 import com.example.backswim.common.controller.CommonController;
 import com.example.backswim.pool.apiresult.APIResult;
 import com.example.backswim.pool.apiresult.PoolAPI;
+import com.example.backswim.pool.apiresult.enums.StatusEnum;
 import com.example.backswim.pool.dto.PoolDto;
 import com.example.backswim.pool.params.SearchQueryParameter;
 import com.example.backswim.pool.params.SearchAddressParam;
@@ -36,7 +37,7 @@ public class PoolSearchController extends CommonController {
     public APIResult<?> SearchQuery(HttpServletRequest request , SearchQueryParameter parameter) throws Exception{
         PoolAPI poolAPI = new PoolAPI();
         if(!parameter.checkStatus()){
-            return new APIResult<>(400,null,"PARAMETER ERROR");
+            return new APIResult<>(400,null, StatusEnum.BAD_REQUEST);
         }
         try{
             List<PoolDto> poolDtoList = poolService.findPoolPlaceListForQuery(parameter);
@@ -46,10 +47,10 @@ public class PoolSearchController extends CommonController {
             PrintLog(request);
         }catch(Exception e){
             PrintErrorLog(request);
-            return new APIResult<>(500,null,"SERVER ERROR");
+            return new APIResult<>(500,null,StatusEnum.INTERNAL_SERVER_ERROR);
         }
 
-        return new APIResult<>(200,poolAPI,"OK");
+        return new APIResult<>(200,poolAPI,StatusEnum.OK);
     }
 
     /**
@@ -64,7 +65,7 @@ public class PoolSearchController extends CommonController {
         PoolAPI poolAPI = new PoolAPI();
 
         if(!parameter.checkStatus()){
-            return new APIResult<>(400,null,"PARAMETER ERROR");
+            return new APIResult<>(400,null,StatusEnum.BAD_REQUEST);
         }
         try{
 
@@ -75,9 +76,9 @@ public class PoolSearchController extends CommonController {
 
         }catch(Exception e){
             PrintErrorLog(request);
-            return new APIResult<>(200,null,e.getMessage());
+            return new APIResult<>(500,null,StatusEnum.INTERNAL_SERVER_ERROR);
         }
 
-        return new APIResult<>(200,poolAPI,"OK");
+        return new APIResult<>(200,poolAPI,StatusEnum.OK);
     }
 }
