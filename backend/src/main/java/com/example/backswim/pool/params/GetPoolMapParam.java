@@ -16,7 +16,7 @@ public class GetPoolMapParam implements checkInterface{
     private Integer mapLevel;
 
     public boolean checkStatus(){
-        if( this.longitude == null || this.latitude == null || this.mapLevel == null) return false;
+        if( this.longitude == null || this.latitude == null || this.mapLevel == null || mapLevel < 1 || mapLevel > 14) return false;
         return true;
     }
 }

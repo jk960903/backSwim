@@ -1,6 +1,7 @@
 package com.example.backswim.common.controller;
 
 import com.example.backswim.pool.apiresult.APIResult;
+import com.example.backswim.pool.apiresult.enums.StatusEnum;
 import com.example.backswim.pool.error.PoolError;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,7 +32,7 @@ public class CommonController {
 
         PrintErrorLog(request);
 
-        return new APIResult(400,null,"WRONG TYPE");
+        return new APIResult(400,null, StatusEnum.PARAMETER_TYPE_ERROR);
     }
 
     public void PrintLog(HttpServletRequest request){
