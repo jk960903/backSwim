@@ -3,6 +3,7 @@ package com.example.backswim.pool.controller;
 import com.example.backswim.common.controller.CommonController;
 import com.example.backswim.pool.apiresult.APIResult;
 import com.example.backswim.pool.apiresult.PoolDetailAPI;
+import com.example.backswim.pool.apiresult.enums.StatusEnum;
 import com.example.backswim.pool.dto.PoolDetailDto;
 import com.example.backswim.pool.dto.PoolDto;
 import com.example.backswim.pool.excetption.poolexception.PoolNotFoundException;
@@ -41,7 +42,7 @@ public class PoolDetailController extends CommonController {
         PoolDto poolDto = null;
 
         if(!getPoolDetailParam.checkStatus()){
-            return new APIResult<>(400,null,"BAD_REQUEST PARAMETER");
+            return new APIResult<>(400,null, StatusEnum.BAD_REQUEST);
         }
 
         try{
@@ -51,14 +52,14 @@ public class PoolDetailController extends CommonController {
             poolDetailAPI.setTotalCount(1);
 
         }catch(PoolNotFoundException e){
-            return new APIResult<>(400,null,e.getMessage());
+            return new APIResult<>(400,null,StatusEnum.NOT_FOUND);
         }catch(Exception e){
             PrintErrorLog(request);
-            return new APIResult<>(500,null,"SERVER ERROR");
+            return new APIResult<>(500,null,StatusEnum.INTERNAL_SERVER_ERROR);
         }
 
         PrintLog(request);
 
-        return new APIResult<>(200,poolDetailAPI,"OK");
+        return new APIResult<>(200,poolDetailAPI,StatusEnum.OK);
     }
 }

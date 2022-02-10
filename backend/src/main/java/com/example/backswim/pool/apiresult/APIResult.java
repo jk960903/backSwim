@@ -1,5 +1,6 @@
 package com.example.backswim.pool.apiresult;
 
+import com.example.backswim.pool.apiresult.enums.StatusEnum;
 import lombok.*;
 
 @Getter
@@ -13,6 +14,6 @@ public class APIResult<T> {
 
     private T Data;
 
-    private String message;
+    private StatusEnum message;
 
 }

@@ -3,6 +3,7 @@ package com.example.backswim.pool.controller;
 import com.example.backswim.common.controller.CommonController;
 import com.example.backswim.pool.apiresult.APIResult;
 import com.example.backswim.pool.apiresult.PoolAPI;
+import com.example.backswim.pool.apiresult.enums.StatusEnum;
 import com.example.backswim.pool.dto.PoolDto;
 import com.example.backswim.pool.params.GetPoolMapParam;
 import com.example.backswim.pool.service.PoolService;
@@ -38,7 +39,7 @@ public class PoolController extends CommonController {
         PoolAPI poolAPI = null;
 
         if(!getPoolMapParam.checkStatus()){
-            return new APIResult(400,null,"BAD_REQUEST PARAMETER");
+            return new APIResult(400,null, StatusEnum.BAD_REQUEST);
         }
 
         try{
@@ -48,8 +49,8 @@ public class PoolController extends CommonController {
         }catch(Exception e) {
             PrintErrorLog(request);
 
-            return new APIResult<>(400,poolAPI,e.getMessage());
+            return new APIResult<>(500,null,StatusEnum.INTERNAL_SERVER_ERROR);
         }
-        return new APIResult(200,poolAPI,"SUCCESS");
+        return new APIResult(200,poolAPI,StatusEnum.OK);
     }
 }
