@@ -24,7 +24,11 @@ export default class Pool extends React.Component {
   }
 
   componentDidUpdate(preProps, preStates) {
-    if (preStates.curGeo !== this.state.curGeo) {
+    if (preProps.curPool !== this.props.curPool) {
+      const curGeo = this.state.curGeo;
+      const curPool = this.props.curPool;
+      this.moveMapByLatLng(curPool.latitude, curPool.longitude, curGeo.mapLevel);
+    } else if (preStates.curGeo !== this.state.curGeo) {
       const curGeo = this.state.curGeo;
       /* TODO: 너무 많은 마커에 대한 최적화 필요 */
       this.getPoolsAndMarking(curGeo.latitude, curGeo.longitude, curGeo.mapLevel);
@@ -86,7 +90,15 @@ export default class Pool extends React.Component {
       });
   }
 
-  /* 해당 위치를 중심으로 지도를 옮깁니다. */
+  /**
+   *
+   * parameter에 맞게 지도를 움직입니다
+   * state change: curGeo
+   * @param {number} lat
+   * @param {number} lng
+   * @param {number} mapLevel
+   * @memberof Pool
+   */
   moveMapByLatLng(lat, lng, mapLevel) {
     this.map.setCenter(new kakao.maps.LatLng(lat, lng));
     this.setState({
@@ -94,7 +106,11 @@ export default class Pool extends React.Component {
     });
   }
 
-  /* 현대 위도 경도를 가져옵니다. */
+  /**
+   *
+   * 현재 위도 경도를 가져오며 moveMapByLatLng 함수 호출
+   * @memberof Pool
+   */
   moveCurrentGeolocation() {
     function success(pos) {
       const curGeo = this.state.curGeo;
@@ -159,4 +175,5 @@ export default class Pool extends React.Component {
 
 Pool.propTypes = {
   setCur: PropTypes.func.isRequired,
+  curPool: PropTypes.instanceOf(PoolNode),
 };

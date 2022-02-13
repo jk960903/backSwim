@@ -1,3 +1,9 @@
+// prettier-ignore
+function RangeNode(start, finish) {
+  Object.assign(this, {start,finish});
+}
+
+// prettier-ignore
 function GeolocationNode(latitude, longitude, mapLevel) {
   Object.assign(this, { latitude, longitude, mapLevel });
 }
@@ -94,4 +100,4 @@ const locationList = [
   ]),
 ];
 
-export { GeolocationNode, PoolNode, PoolDetailNode, LocationNode, locationList };
+export { RangeNode, GeolocationNode, PoolNode, PoolDetailNode, LocationNode, locationList };

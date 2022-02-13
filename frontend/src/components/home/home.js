@@ -5,6 +5,7 @@ import Pool from 'Components/pool/pool.js';
 import SideBar from 'Components/sideBar/sideBar.js';
 import './home.css';
 import { EXT } from 'Common/myTypes.js';
+import { PoolNode } from 'Common/myNodes.js';
 
 class Home extends React.Component {
   constructor(props) {
@@ -31,6 +32,17 @@ class Home extends React.Component {
     });
   }
 
+  setCurPool(nxtPool) {
+    if (nxtPool instanceof PoolNode === false) {
+      console.error(`Param Error: ${nxtPool}`);
+      return;
+    }
+
+    this.setState({
+      curPool: nxtPool,
+    });
+  }
+
   render() {
     console.log('Rendering: Home');
     return (
@@ -40,12 +52,14 @@ class Home extends React.Component {
           {/* TODO: setCurExt 전달 정리하기 */}
           <SideBar
             setCurExt={(target) => this.setCurExt(target)}
+            setCurPool={(value) => this.setCurPool(value)}
             curExt={this.state.curExt}
             curPool={this.state.curPool}
             curPoolDetail={this.state.curPoolDetail}
           ></SideBar>
           <Pool
             setCur={(nxtExt, nxtPool, nxtPoolDetail) => this.setCur(nxtExt, nxtPool, nxtPoolDetail)}
+            curPool={this.state.curPool}
           ></Pool>
         </div>
         <Footer></Footer>

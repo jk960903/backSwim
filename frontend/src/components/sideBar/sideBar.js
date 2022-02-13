@@ -36,7 +36,7 @@ export default class SideBar extends Component {
     return (
       <div className={classList}>
         {curExt === EXT.TEXT ? (
-          <SideBarText></SideBarText>
+          <SideBarText setCurPool={this.props.setCurPool}></SideBarText>
         ) : curExt === EXT.LOCATION_SI ? (
           <SideBarLocation></SideBarLocation>
         ) : curExt === EXT.FAVORITE ? (
@@ -83,6 +83,7 @@ export default class SideBar extends Component {
 
 SideBar.propTypes = {
   setCurExt: PropTypes.func.isRequired,
+  setCurPool: PropTypes.func.isRequired,
   curExt: PropTypes.symbol.isRequired,
   curPool: PropTypes.instanceOf(PoolNode),
   curPoolDetail: PropTypes.instanceOf(PoolDetailNode),

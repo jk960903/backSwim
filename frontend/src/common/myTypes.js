@@ -7,4 +7,9 @@ const EXT = Object.freeze({
   DETAIL: Symbol('detail'),
 });
 
-export { EXT };
+const INC_DEC = Object.freeze({
+  INCREASE: Symbol('increase'),
+  DECREASE: Symbol('decrease'),
+});
+
+export { EXT, INC_DEC };

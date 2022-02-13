@@ -52,3 +52,7 @@ input {
 .click {
   background-color: var(--sky-color);
 }
+
+.focus-bg-change {
+  background-color: var(--sky-color);
+}
