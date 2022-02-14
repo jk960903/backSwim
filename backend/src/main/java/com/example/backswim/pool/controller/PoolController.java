@@ -1,35 +1,28 @@
 package com.example.backswim.pool.controller;
 
+import com.example.backswim.common.controller.CommonController;
 import com.example.backswim.pool.apiresult.APIResult;
 import com.example.backswim.pool.apiresult.PoolAPI;
+import com.example.backswim.pool.apiresult.enums.StatusEnum;
 import com.example.backswim.pool.dto.PoolDto;
-import com.example.backswim.pool.entity.PoolEntity;
-import com.example.backswim.pool.error.PoolError;
 import com.example.backswim.pool.params.GetPoolMapParam;
 import com.example.backswim.pool.service.PoolService;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.validation.BindException;
 import org.springframework.web.bind.annotation.*;
 
 
 import javax.servlet.http.HttpServletRequest;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @RestController
 @RequestMapping(value="api/pool")
 @RequiredArgsConstructor
-@RestControllerAdvice
-public class PoolController {
+public class PoolController extends CommonController {
 
-    private Logger logger = LoggerFactory.getLogger(this.getClass());
+
+
+    private final PoolService poolService;
+
     /**
      * 현재 위치를 토대로 가져오기
      * longitude = 경도
@@ -41,42 +34,23 @@ public class PoolController {
      * 12Lv 32km 13Lv 64km 14Lv 128km
      */
 
-    private final PoolService poolService;
-
-    /**
-     * 타입 에러에 대한 Handler
-     * 컨트롤러 자체에 들어가기 전 상황에 대해 Bind Exception 발생시 작동됩니다.
-     * 주로 Parameter에 타입 에러가 들어갔을 경우
-     * ex ) int 형인데 char형 or String이 들어갔을 경우
-     * @return
-     */
-    @ExceptionHandler(BindException.class)
-    public APIResult sampleError(HttpServletRequest request){
-        PoolError error = new PoolError();
-        error.setErrorCode("400");
-        error.setErrorMessage("WRONG TYPE");
-
-        logger.info("요청 URL : {}",request.getRequestURL());
-        logger.info("요청시간 : {}", LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss")));
-        logger.info("클라이언트 IP : {}",request.getRemoteAddr());
-
-        return new APIResult(400,null,"WRONG TYPE");
-    }
-
-
     @GetMapping("/getpoolmapforlocate")
     public APIResult<PoolAPI> GetPoolMapForLocate(HttpServletRequest request, GetPoolMapParam getPoolMapParam){
+        PoolAPI poolAPI = null;
+
         if(!getPoolMapParam.checkStatus()){
-            return new APIResult(400,null,"BAD_REQUEST PARAMETER");
+            return new APIResult(400,null, StatusEnum.BAD_REQUEST);
         }
-        List<PoolDto> lists = poolService.findPoolListForMapLocate(getPoolMapParam);
 
-        PoolAPI poolAPI = new PoolAPI(lists,lists.size());
+        try{
+            List<PoolDto> lists = poolService.findPoolListForMapLocate(getPoolMapParam);
+            poolAPI = new PoolAPI(lists,lists.size());
+            PrintLog(request);
+        }catch(Exception e) {
+            PrintErrorLog(request);
 
-        logger.info("요청 URL : {}",request.getRequestURL());
-        logger.info("요청시간 : {}", LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss")));
-        logger.info("클라이언트 IP : {}",request.getRemoteAddr());
-
-        return new APIResult(200,poolAPI,"SUCCESS");
+            return new APIResult<>(500,null,StatusEnum.INTERNAL_SERVER_ERROR);
+        }
+        return new APIResult(200,poolAPI,StatusEnum.OK);
     }
 }
