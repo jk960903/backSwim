@@ -7,7 +7,7 @@
 
 [1. 함수형 컴포넌트와 클래스 컴포넌트](https://velog.io/@whow1101/1.-%ED%94%84%EB%A1%9C%EC%A0%9D%ED%8A%B8-%EC%8B%9C%EC%9E%91-React-%ED%95%A8%EC%88%98%ED%98%95-%EC%BB%B4%ED%8F%AC%EB%84%8C%ED%8A%B8%EC%99%80-%ED%81%B4%EB%9E%98%EC%8A%A4-%EC%BB%B4%ED%8F%AC%EB%84%8C%ED%8A%B8)
 
-[2. React-router-dom](https://velog.io/@whow1101/2.-React-router-dom)
+[2. React-Router](https://velog.io/@whow1101/2.-React-router-dom)
 
 [3. Header 컴포넌트와 테스트](https://velog.io/@whow1101/3.-Header-%EC%BB%B4%ED%8F%AC%EB%84%8C%ED%8A%B8%EC%99%80-%ED%85%8C%EC%8A%A4%ED%8A%B8)
 
