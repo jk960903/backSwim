@@ -24,6 +24,7 @@ module.exports = {
         pathRewrite: { '^/test': '' },
       },
     },
+    historyApiFallback:true,
   },
   module: {
     rules: [
