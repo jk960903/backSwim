@@ -1,9 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import './pool.css';
-import MyRequest from 'Common/myRequest';
-import { EXT } from 'Common/myTypes';
-import { GeolocationNode, PoolNode, PoolDetailNode } from 'Common/myNodes';
+import MyRequest from '#common/myRequest';
+import { EXT } from '#common/myTypes';
+import { GeolocationNode, PoolNode, PoolDetailNode } from '#common/myNodes';
 
 const { kakao } = window;
 const markerImgSrc = 'https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/markerStar.png';
