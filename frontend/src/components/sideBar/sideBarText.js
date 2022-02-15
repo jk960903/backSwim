@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import './sideBarText.css';
-import MyRequest from 'Common/myRequest';
-import debounce from 'Utils/debounce';
-import { PoolNode, RangeNode } from 'Common/myNodes';
-import { INC_DEC } from 'Common/myTypes';
+import MyRequest from '#common/myRequest';
+import debounce from '#utils/debounce';
+import { PoolNode, RangeNode } from '#common/myNodes';
+import { INC_DEC } from '#common/myTypes';
 
 export default class SideBarText extends Component {
   selectedItemIdx = -1;

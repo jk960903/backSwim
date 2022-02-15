@@ -1,11 +1,11 @@
 import React from 'react';
-import Header from 'Components/header/header.js';
-import Footer from 'Components/footer/footer.js';
-import Pool from 'Components/pool/pool.js';
-import SideBar from 'Components/sideBar/sideBar.js';
+import Header from '#components/header/header.js';
+import Footer from '#components/footer/footer.js';
+import Pool from '#components/pool/pool.js';
+import SideBar from '#components/sideBar/sideBar.js';
 import './home.css';
-import { EXT } from 'Common/myTypes.js';
-import { PoolNode } from 'Common/myNodes.js';
+import { EXT } from '#common/myTypes.js';
+import { PoolNode } from '#common/myNodes.js';
 
 class Home extends React.Component {
   constructor(props) {
