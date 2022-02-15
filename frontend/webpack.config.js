@@ -24,7 +24,7 @@ module.exports = {
         pathRewrite: { '^/test': '' },
       },
     },
-    historyApiFallback:true,
+    historyApiFallback: true,
   },
   module: {
     rules: [
@@ -56,9 +56,9 @@ module.exports = {
   ],
   resolve: {
     alias: {
-      Components: path.resolve(__dirname, 'src/components/'),
-      Common: path.resolve(__dirname, 'src/common/'),
-      Utils: path.resolve(__dirname, 'src/utils/'),
+      '#components': path.resolve(__dirname, 'src/components/'),
+      '#common': path.resolve(__dirname, 'src/common/'),
+      '#utils': path.resolve(__dirname, 'src/utils/'),
     },
   },
 };
