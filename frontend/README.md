@@ -6,6 +6,7 @@ npm install
 ## 실행 방법
 ```shell
 $ npm start
+$ npm run dev
 ```
 
 ## 테스트 방법
