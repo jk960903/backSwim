@@ -1,6 +1,6 @@
-package com.example.backswim.pool.apiresult;
+package com.example.backswim.common.api;
 
-import com.example.backswim.pool.apiresult.enums.StatusEnum;
+import com.example.backswim.common.api.enums.StatusEnum;
 import lombok.*;
 
 @Getter
