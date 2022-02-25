@@ -1,4 +1,4 @@
-package com.example.backswim.pool.apiresult;
+package com.example.backswim.common.api;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
