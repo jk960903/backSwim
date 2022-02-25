@@ -23,7 +23,7 @@ public class JoinMemberController extends CommonController {
     public APIResult<Boolean> joinMember(HttpServletRequest request, JoinMemberParam param){
         if(!param.checkStatus()){
             PrintLog(request);
-            return new APIResult<>(400,false, StatusEnum.BAD_REQUEST);
+            return new APIResult<>(400,null, StatusEnum.BAD_REQUEST);
         }
         try{
             if(!userService.joinMember(param)){
@@ -33,7 +33,7 @@ public class JoinMemberController extends CommonController {
         }catch(Exception e){
             PrintErrorLog(request);
             e.printStackTrace();
-            return new APIResult<>(500, false, StatusEnum.INTERNAL_SERVER_ERROR);
+            return new APIResult<>(500, null, StatusEnum.INTERNAL_SERVER_ERROR);
         }
         return new APIResult<>(200,true,StatusEnum.OK);
     }

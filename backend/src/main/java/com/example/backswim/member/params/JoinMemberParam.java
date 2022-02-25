@@ -23,4 +23,9 @@ public class JoinMemberParam extends CheckDuplicateID {
         return true;
     }
 
+    public JoinMemberParam(String email ,String password){
+        super(email);
+        this.password = password;
+    }
+
 }

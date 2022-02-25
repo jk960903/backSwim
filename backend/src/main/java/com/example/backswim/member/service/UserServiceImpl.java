@@ -43,7 +43,6 @@ public class UserServiceImpl implements UserService{
                 .password(encPassword)
                 .emailAuthKey(uuid)
                 .regdate(LocalDateTime.now())
-                .emailAuthDate(LocalDateTime.now())
                 .build();
 
         userRepository.save(userEntity);
