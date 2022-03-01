@@ -33,7 +33,7 @@ public class CommonController {
 
         PrintErrorLog(request);
 
-        return new APIResult(400,null, StatusEnum.BAD_REQUEST);
+        return new APIResult(400,null, StatusEnum.PARAMETER_TYPE_ERROR);
     }
 
     public void PrintLog(HttpServletRequest request){

@@ -22,10 +22,10 @@ public class EmailEntity {
     private String userEmail;
 
     @Column(length = 1000)
-    private String EmailTitle;
+    private String emailTitle;
 
     @Column(length = 1000)
-    private String EmailContent;
+    private String emailContent;
 
     @NotNull
     private Integer userId;

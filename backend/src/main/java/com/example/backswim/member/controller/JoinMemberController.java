@@ -6,11 +6,13 @@ import com.example.backswim.common.api.enums.StatusEnum;
 import com.example.backswim.common.controller.CommonController;
 import com.example.backswim.member.params.CheckDuplicateID;
 import com.example.backswim.member.params.JoinMemberParam;
+import com.example.backswim.member.params.UserEmailParam;
 import com.example.backswim.member.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.concurrent.TimeoutException;
 
 @RestController
 @RequestMapping(value="api/joinmember")
@@ -20,7 +22,7 @@ public class JoinMemberController extends CommonController {
     private final UserService userService;
 
     @PostMapping("/addmember")
-    public APIResult<Boolean> joinMember(HttpServletRequest request, JoinMemberParam param){
+    public APIResult<Boolean> joinMember(HttpServletRequest request,@RequestBody JoinMemberParam param){
         if(!param.checkStatus()){
             PrintLog(request);
             return new APIResult<>(400,null, StatusEnum.BAD_REQUEST);
@@ -39,7 +41,7 @@ public class JoinMemberController extends CommonController {
     }
 
     @PostMapping("/duplicateid")
-    public APIResult<Boolean> checkduplicate(HttpServletRequest request,CheckDuplicateID param){
+    public APIResult<Boolean> checkduplicate(HttpServletRequest request,@RequestBody CheckDuplicateID param){
         if(!param.checkStatus()){
             return new APIResult<>(400,null, StatusEnum.BAD_REQUEST);
         }
@@ -72,6 +74,36 @@ public class JoinMemberController extends CommonController {
     }
 
 
+    @GetMapping("/resend-mail")
+    public APIResult<Boolean> resendEmail(HttpServletRequest request , UserEmailParam param){
+        boolean result = false;
+        if(!param.checkStatus()){
+            return new APIResult<>(400,null, StatusEnum.BAD_REQUEST);
+        }
+        try{
+            PrintLog(request);
+            result = userService.resendEmaiAuthEmail(param);
+        }catch(Exception e){
+            return new APIResult<>(500,null,StatusEnum.INTERNAL_SERVER_ERROR);
+        }
+        return new APIResult<>(200,result,StatusEnum.OK);
+    }
+
+
+    @DeleteMapping("/tempdeleteuser")
+    public APIResult<Boolean> deleteUser(HttpServletRequest request,UserEmailParam param){
+        boolean result = false;
+        if(!param.checkStatus()){
+            return new APIResult<>(400 ,null ,StatusEnum.BAD_REQUEST);
+        }
+        try{
+            PrintLog(request);
+            result = userService.deleteUser(param);
+        }catch(Exception e){
+            return new APIResult<>(500,null,StatusEnum.INTERNAL_SERVER_ERROR);
+        }
+        return new APIResult<>(200,result,StatusEnum.OK);
+    }
 
 
 
