@@ -32,7 +32,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest
 @AutoConfigureMockMvc
-public class UserJoinTest {
+public class UserJoinTest extends TestPackage{
 
     private MockMvc mockMvc;
 
@@ -92,7 +92,7 @@ public class UserJoinTest {
         MultiValueMap<String ,String> map = new LinkedMultiValueMap<>();
 
         map.add("userEmail",param.getUserEmail());
-        mockMvc.perform(post("/api/joinmember/duplicateid").params(map).contentType(MediaType.APPLICATION_JSON))
+        mockMvc.perform(post("/api/joinmember/duplicateid").content(toJson(param)).contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.statusCode",is(200)))
                 .andExpect(jsonPath("$.data",is(true)));
