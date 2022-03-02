@@ -11,7 +11,7 @@ import java.util.regex.Pattern;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class JoinMemberParam extends CheckDuplicateID {
+public class JoinMemberParam extends UserEmailParam {
 
 
     private String password;

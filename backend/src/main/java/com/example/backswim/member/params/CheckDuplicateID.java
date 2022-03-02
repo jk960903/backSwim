@@ -8,27 +8,9 @@ import java.util.regex.Pattern;
 
 @Getter
 @Setter
-@NoArgsConstructor
-@AllArgsConstructor
-@Builder
-public class CheckDuplicateID implements CheckInterface {
+public class CheckDuplicateID extends UserEmailParam{
 
-    private String userEmail;
-
-    @Override
-    public boolean checkStatus() {
-
-        if(userEmail == null || !checkEmail()) return false;
-        return true;
-    }
-
-    public boolean checkEmail(){
-        String regex = "[_a-z0-9-]+(.[_a-z0-9-]+)*@(?:\\w+\\.)+\\w+$";
-        Pattern p = Pattern.compile(regex);
-        Matcher matcher = p.matcher(userEmail);
-        if(matcher.matches()){
-            return true;
-        }
-        return false;
+    public CheckDuplicateID(String s){
+        super(s);
     }
 }
