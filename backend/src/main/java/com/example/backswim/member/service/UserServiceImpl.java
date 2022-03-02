@@ -188,6 +188,106 @@ public class UserServiceImpl implements UserService{
         return result;
     }
 
+    /**
+     * 패스워드 초기화 이메일 전송
+     * @param param
+     * @return
+     */
+    @Override
+    public boolean sendResetPassword(ResetPasswordParam param) {
+        Optional<UserEntity> optionalUser = userRepository.findByUserEmail(param.getUserEmail());
+
+        if(optionalUser.isEmpty()){
+            return false;
+        }
+
+        UserEntity userEntity = optionalUser.get();
+
+        String uuid = UUID.randomUUID().toString();
+
+        userEntity.setResetPasswordKey(uuid);
+        userEntity.setResetPasswordLimitDt(LocalDateTime.now().plusMinutes(30)); //회원 인증 만료 시간 30분
+
+        userRepository.save(userEntity);
+
+        EmailEntity emailEntity = EmailEntity.builder()
+                .emailTitle(userEntity.getUserEmail()+"님 BackSwim 비밀번호 초기화 이메일입니다. ")
+                .userEmail(userEntity.getUserEmail())
+                .userId(userEntity.getSeq())
+                .emailContent("<p>"+" BackSwim 사이트 비밀번호 초기화 이메일입니다. </p>\n<p>아래 링크를 클릭하셔서 비밀번호를 변경해주세요</p>\n"
+                        + "<div><a target='_blank' href='http://localhost:3000/resetpassword?uuid="+uuid+"'>비밀번호 변경</a></div>").build();
+
+        emailEntity = emailRepository.save(emailEntity);
+
+        mailComponents.sendMail(emailEntity.getSeq());
+
+        return true;
+    }
+
+    @Override
+    public boolean changePassword(ChangePasswordParam param) throws TimeoutException {
+        Optional<UserEntity> optionalUser = userRepository.findByResetPasswordKey(param.getUuid());
+
+        if(optionalUser.isEmpty()){
+            return false;
+        }
+
+        UserEntity userEntity = optionalUser.get();
+
+        if(userEntity.getResetPasswordLimitDt().isBefore(LocalDateTime.now())){
+            throw new TimeoutException("시간 만료");
+        }else if(userEntity.getResetPasswordLimitDt() == null){
+            return false;
+        }
+
+        String encPassword = BCrypt.hashpw(param.getPassword(),BCrypt.gensalt());
+
+        userEntity.setResetPasswordLimitDt(null);
+        userEntity.setResetPasswordKey(null);
+        userEntity.setPassword(encPassword);
+
+        userRepository.save(userEntity);
+
+        return true;
+    }
+
+    @Override
+    public boolean resendResetPasswordEmail(ResetPasswordParam param){
+        boolean result = false;
+
+        Optional<UserEntity> optionalUser = userRepository.findByUserEmail(param.getUserEmail());
+
+        if(optionalUser.isEmpty()){
+            return result;
+        }
+
+        String uuid = UUID.randomUUID().toString();
+
+        UserEntity user = optionalUser.get();
+
+        EmailEntity email = EmailEntity.builder()
+                .userEmail(user.getUserEmail())
+                .userId(user.getSeq())
+                .emailTitle(user.getUserEmail()+"님 BackSwim 비밀번호 초기화 이메일입니다. ")
+                .emailContent("<p>"+" BackSwim 사이트 비밀번호 초기화 이메일입니다. </p>\n<p>아래 링크를 클릭하셔서 비밀번호를 변경해주세요</p>\n"
+                        + "<div><a target='_blank' href='http://localhost:3000/resetpassword?uuid="+uuid+"'>비밀번호 변경</a></div>")
+                .build();
+
+        user.setResetPasswordKey(uuid);
+        user.setResetPasswordLimitDt(LocalDateTime.now().plusMinutes(30));
+
+        email = emailRepository.save(email);
+        userRepository.save(user);
+
+
+        mailComponents.sendMail(email.getSeq());
+
+
+        result = true;
+
+        return result;
+    }
+
     private void getAuthentication(String email , String password){
         //PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
         //password = passwordEncoder.encode(password);

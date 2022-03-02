@@ -4,9 +4,7 @@ package com.example.backswim.member.controller;
 import com.example.backswim.common.api.APIResult;
 import com.example.backswim.common.api.enums.StatusEnum;
 import com.example.backswim.common.controller.CommonController;
-import com.example.backswim.member.params.CheckDuplicateID;
-import com.example.backswim.member.params.JoinMemberParam;
-import com.example.backswim.member.params.UserEmailParam;
+import com.example.backswim.member.params.*;
 import com.example.backswim.member.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -104,6 +102,72 @@ public class JoinMemberController extends CommonController {
         }
         return new APIResult<>(200,result,StatusEnum.OK);
     }
+
+    /**
+     * 비밀번호 초기화 이메일 전송 컨트롤러
+     * @param request
+     * @param param
+     * @return
+     */
+    @GetMapping("/resetpassword")
+    public APIResult<Boolean> resetPassword(HttpServletRequest request, ResetPasswordParam param){
+        boolean result = false;
+        if(!param.checkStatus()){
+            return new APIResult<>(400,null,StatusEnum.BAD_REQUEST);
+        }
+        try{
+            PrintLog(request);
+            result = userService.sendResetPassword(param);
+        } catch(Exception e){
+            PrintErrorLog(request);
+            return new APIResult<>(500,null,StatusEnum.INTERNAL_SERVER_ERROR);
+        }
+        return new APIResult<>(200,result,StatusEnum.OK);
+    }
+
+    /**
+     * 초기화 링크를 통해 들어가 비밀번호 변경 전송 컨트롤러
+     * @param request
+     * @param param
+     * @return
+     */
+    @PostMapping("/changepassword")
+    public APIResult<Boolean> changePassword(HttpServletRequest request,@RequestBody ChangePasswordParam param){
+        boolean result = false;
+        if(!param.checkStatus()){
+            return new APIResult<>(400,null, StatusEnum.BAD_REQUEST);
+        }
+        try{
+            PrintLog(request);
+            result = userService.changePassword(param);
+        }catch(TimeoutException e){
+            PrintLog(request); // 서버에서 발생한 Error가 아니라 따로 Error Log 로 찍지않음
+            return new APIResult<>(400,null,StatusEnum.TIME_OUT);
+        }catch(Exception e){
+            PrintErrorLog(request);
+            return new APIResult<>(500,null,StatusEnum.INTERNAL_SERVER_ERROR);
+        }
+        return new APIResult<>(200,result,StatusEnum.OK);
+    }
+
+    @GetMapping("/resend-resetpassword")
+    public APIResult<Boolean> resendPasswordReset(HttpServletRequest request , ResetPasswordParam param){
+        boolean result = false;
+
+        if(!param.checkStatus()){
+            PrintErrorLog(request);
+        }
+        try{
+            PrintLog(request);
+            result = userService.resendResetPasswordEmail(param);
+        }catch(Exception e){
+            PrintErrorLog(request);
+            return new APIResult<>(500,null,StatusEnum.INTERNAL_SERVER_ERROR);
+        }
+        return new APIResult<>(200,result,StatusEnum.OK);
+    }
+
+
 
 
 
