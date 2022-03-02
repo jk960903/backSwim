@@ -1,7 +1,10 @@
 package com.example.backswim;
 
+import com.example.backswim.common.api.enums.StatusEnum;
+import com.example.backswim.member.params.ChangePasswordParam;
 import com.example.backswim.member.params.CheckDuplicateID;
 import com.example.backswim.member.params.JoinMemberParam;
+import com.example.backswim.member.params.ResetPasswordParam;
 import com.example.backswim.pool.params.SearchAddressParam;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import org.junit.jupiter.api.BeforeEach;
@@ -21,6 +24,7 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.filter.CharacterEncodingFilter;
 
+import java.util.UUID;
 import java.util.stream.Stream;
 
 import static org.hamcrest.Matchers.*;
@@ -83,6 +87,59 @@ public class UserJoinTest extends TestPackage{
         );
     }
 
+    static Stream<Arguments> resetPasswordSuccess(){
+        return Stream.of(
+                Arguments.arguments(new ResetPasswordParam("benzen903@gmail")),
+                Arguments.arguments(new ResetPasswordParam("whow1101@naver.com")),
+                Arguments.arguments(new ResetPasswordParam("jk960903@naver.com"))
+        );
+    }
+
+    static Stream<Arguments> resetPasswordFailNotFoundUser(){
+        return Stream.of(
+                Arguments.arguments(new ResetPasswordParam("benzen9031@gmail.com")),
+                Arguments.arguments(new ResetPasswordParam("whow11011@naver.com")),
+                Arguments.arguments(new ResetPasswordParam("jk9609031@naver.com"))
+        );
+    }
+    static Stream<Arguments> resetPasswordFailParameterNull(){
+        return Stream.of(
+                Arguments.arguments(new ResetPasswordParam()),
+                Arguments.arguments(new ResetPasswordParam()),
+                Arguments.arguments(new ResetPasswordParam())
+        );
+    }
+
+    static Stream<Arguments> changePasswordSuccess(){
+        return Stream.of(
+                Arguments.arguments(new ChangePasswordParam("e6927d1e-c9e8-4875-8c17-07c4bd76dd0f","backswim123")),
+                Arguments.arguments(new ChangePasswordParam("3111d996-7105-44a4-8b00-d8a6402884ba","backswim123")),
+                Arguments.arguments(new ChangePasswordParam("a68b00a0-4701-4693-ba06-e8518aed0b47","backswim123"))
+        );
+    }
+
+    static Stream<Arguments> changePasswordFailNotValidateUUID(){
+        return Stream.of(
+                Arguments.arguments(new ChangePasswordParam(UUID.randomUUID().toString(),"backswim123")),
+                Arguments.arguments(new ChangePasswordParam(UUID.randomUUID().toString(),"backswim123")),
+                Arguments.arguments(new ChangePasswordParam(UUID.randomUUID().toString(),"backswim123"))
+        );
+    }
+
+    static Stream<Arguments> changePasswordExpiredDate(){
+        return Stream.of(
+                Arguments.arguments(new ChangePasswordParam("e6927d1e-c9e8-4875-8c17-07c4bd76dd0f","backswim123")),
+                Arguments.arguments(new ChangePasswordParam("3111d996-7105-44a4-8b00-d8a6402884ba","backswim123")),
+                Arguments.arguments(new ChangePasswordParam("a68b00a0-4701-4693-ba06-e8518aed0b47","backswim123"))
+        );
+    }
+    static Stream<Arguments> changePasswordNullParam(){
+        return Stream.of(
+                Arguments.arguments(new ChangePasswordParam(null,"backswim123")),
+                Arguments.arguments(new ChangePasswordParam("3111d996-7105-44a4-8b00-d8a6402884ba",null)),
+                Arguments.arguments(new ChangePasswordParam())
+        );
+    }
     //15ms
     @DisplayName("이메일 중복체크 API 성공 테스트")
     @ParameterizedTest(name="/api/joinmember/duplicateid")
@@ -175,4 +232,101 @@ public class UserJoinTest extends TestPackage{
                 .andExpect(jsonPath("$.data",is(false)))
                 .andExpect(jsonPath("$.message",is("OK")));
     }
+
+    @DisplayName("비밀번호 초기화 이메일 전송 Success")
+    @ParameterizedTest(name="/api/joinmember/resetpassword")
+    @MethodSource("resetPasswordSuccess")
+    public void resetPasswordSuccess(ResetPasswordParam param) throws Exception{
+        MultiValueMap<String ,String> map = new LinkedMultiValueMap<>();
+
+        map.add("userEmail",param.getUserEmail());
+
+        mockMvc.perform(get("/api/joinmember/resetpassword").params(map).contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.statusCode",is(200)))
+                .andExpect(jsonPath("$.data",is(true)))
+                .andExpect(jsonPath("$.message",is("OK")));
+    }
+
+
+    @DisplayName("비밀번호 초기화 이메일 전송 Fail User Not Found")
+    @ParameterizedTest(name="/api/joinmember/resetpassword")
+    @MethodSource("resetPasswordFailNotFoundUser")
+    public void resetPasswordFailUserNotFound(ResetPasswordParam param) throws Exception{
+        MultiValueMap<String ,String> map = new LinkedMultiValueMap<>();
+
+        map.add("userEmail",param.getUserEmail());
+
+        mockMvc.perform(get("/api/joinmember/resetpassword").params(map).contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.statusCode",is(200)))
+                .andExpect(jsonPath("$.data",is(false)))
+                .andExpect(jsonPath("$.message",is("OK")));
+    }
+
+
+    @DisplayName("비밀번호 초기화 이메일 전송 Fail PARAMTER NULL")
+    @ParameterizedTest(name="/api/joinmember/resetpassword")
+    @MethodSource("resetPasswordFailParameterNull")
+    public void resetPasswordFailNullParam(ResetPasswordParam param) throws Exception{
+        MultiValueMap<String ,String> map = new LinkedMultiValueMap<>();
+
+
+        mockMvc.perform(get("/api/joinmember/resetpassword").params(map).contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.statusCode",is(400)))
+                .andExpect(jsonPath("$.data",nullValue()))
+                .andExpect(jsonPath("$.message",is("BAD_REQUEST")));
+    }
+    //98ms
+    @DisplayName("비밀번호 변경 성공 TEST")
+    @ParameterizedTest(name="/api/joinmember/changepassword")
+    @MethodSource("changePasswordSuccess")
+    public void changePasswordSuccess(ChangePasswordParam param) throws Exception{
+        mockMvc.perform(post("/api/joinmember/changepassword").content(toJson(param)).contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.statusCode",is(200)))
+                .andExpect(jsonPath("$.data",is(true)))
+                .andExpect(jsonPath("$.message").value(StatusEnum.OK.name()));
+    }
+
+    //runtime 15ms
+    @DisplayName("비밀번호 변경 실패 TEST 유효하지 않은 인증키")
+    @ParameterizedTest(name="/api/joinmember/changepassword")
+    @MethodSource("changePasswordFailNotValidateUUID")
+    public void changePasswordFailNotValidateUUID(ChangePasswordParam param) throws Exception{
+        mockMvc.perform(post("/api/joinmember/changepassword").content(toJson(param)).contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.statusCode",is(200)))
+                .andExpect(jsonPath("$.data",is(false)))
+                .andExpect(jsonPath("$.message").value(StatusEnum.OK.name()));
+    }
+
+
+    //runtime 9ms
+    @DisplayName("비밀번호 변경 실패 TEST Null Param")
+    @ParameterizedTest(name="/api/joinmember/changepassword")
+    @MethodSource("changePasswordNullParam")
+    public void changePasswordNullParam(ChangePasswordParam param) throws Exception{
+        mockMvc.perform(post("/api/joinmember/changepassword").content(toJson(param)).contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.statusCode",is(400)))
+                .andExpect(jsonPath("$.data",nullValue()))
+                .andExpect(jsonPath("$.message").value(StatusEnum.BAD_REQUEST.name()));
+    }
+
+
+
+    //runtime 22ms
+    @DisplayName("비밀번호 변경 실패 변경 기한 초과 ")
+    @ParameterizedTest(name="/api/joinmember/changepassword")
+    @MethodSource("changePasswordExpiredDate")
+    public void changePasswordExpiredDate(ChangePasswordParam param) throws Exception{
+        mockMvc.perform(post("/api/joinmember/changepassword").content(toJson(param)).contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.statusCode",is(400)))
+                .andExpect(jsonPath("$.data",nullValue()))
+                .andExpect(jsonPath("$.message").value(StatusEnum.TIME_OUT.name()));
+    }
+
 }

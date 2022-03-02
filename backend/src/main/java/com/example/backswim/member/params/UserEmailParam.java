@@ -21,8 +21,8 @@ public class UserEmailParam implements CheckInterface {
     @Override
     public boolean checkStatus() {
 
-        if(userEmail == null || !checkEmail()) return false;
-        return true;
+        if(userEmail != null && checkEmail()) return true;
+        return false;
     }
 
     public boolean checkEmail(){
