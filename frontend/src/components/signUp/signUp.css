@@ -1,0 +1,47 @@
+@import url(../../root.css);
+
+:root {
+  --sign-up-max-width: 500px;
+  --sign-up-padding: 10px;
+
+  --sign-up-item-gap: 10px;
+  --sign-up-item-input-gap: 5px;
+}
+
+.sign-up-container {
+  display: flex;
+  flex-direction: column;
+  border: var(--default-border);
+  border-radius: 10px;
+  max-width: var(--sign-up-max-width);
+  margin: auto;
+  font-size: 1rem;
+  padding: var(--sign-up-padding);
+}
+
+.sign-up-container > *:not(:last-child) {
+  margin-bottom: var(--sign-up-item-gap);
+}
+
+.sign-up-item {
+  display: flex;
+  flex-direction: column;
+}
+
+.sign-up-item > *:not(:last-child) {
+  margin-bottom: var(--sign-up-item-input-gap);
+}
+
+.sign-up-item > input {
+  border: var(--default-border);
+}
+
+.sign-up-item-alert {
+  font-size: 0.8rem;
+  color: var(--red-color);
+}
+
+.sign-up-item-btn {
+  margin: auto;
+  background-color: var(--half-sky-color);
+}

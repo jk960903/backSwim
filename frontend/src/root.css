@@ -4,13 +4,16 @@
   --grey-color: #f2f2f2;
   --sky-color: #87cefa;
   --half-sky-color: rgb(135, 206, 250, 0.8);
+  --red-color: #ff0000;
+  --opacity-black-color: rgba(0, 0, 0, 0.2);
 
   /* size */
   --default-font-size: 12px;
-  --default-button-padding: 5px;
+  --default-button-padding: 8px;
 
   /* border */
   --default-border: 1px solid var(--sky-color);
+  --thick-border: 2px solid var(--sky-color);
 
   /* For Test */
   /* --border-test: 1px solid black; */
@@ -39,6 +42,7 @@ button {
   background-color: transparent;
   padding: var(--default-button-padding);
   cursor: pointer;
+  border-radius: 10px;
 }
 
 code {
@@ -47,6 +51,7 @@ code {
 
 input {
   border-radius: 5px;
+  padding: 5px;
 }
 
 .click {

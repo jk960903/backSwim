@@ -1,4 +1,4 @@
-// TODO: error 타입 만들고 throw 해줘야함
+import { ClientError } from './myError';
 
 // closures in charge of interation with the server
 const MyRequest = (() => {
@@ -16,16 +16,36 @@ const MyRequest = (() => {
       .then((response) => response.json())
       .then((data) => {
         if (Object.prototype.hasOwnProperty.call(data, 'statusCode') === false) {
-          throw { message: 'there is no statusCode' };
+          throw new ClientError(data, 'there is no statusCode');
         }
 
         if (data.statusCode !== 200) {
-          throw data;
+          throw new ClientError(data, 'statuscode error');
         }
         return data;
       })
       .catch((err) => {
-        console.error(err);
+        /* catching client error */
+        if (err instanceof ClientError) {
+          err.print();
+        }
+
+        throw err;
+      });
+  }
+
+  function customRequestToServer(url, option) {
+    return fetch(url, option)
+      .then((response) => response.json())
+      .then((data) => {
+        if (Object.prototype.hasOwnProperty.call(data, 'statusCode') === false) {
+          throw new ClientError(data, 'there is no statusCode');
+        }
+
+        if (data.statusCode !== 200) {
+          throw new ClientError(data, 'statuscode error');
+        }
+        return data;
       });
   }
 
@@ -58,11 +78,49 @@ const MyRequest = (() => {
     return requestToServer(url, option);
   }
 
+  function signUp(userEmail, password) {
+    const data = { userEmail, password };
+    const url = host + '/joinmember/addmember';
+    const option = { ...defaultOption };
+    option.method = 'POST';
+    option.body = JSON.stringify(data);
+    return requestToServer(url, option);
+  }
+
+  function resendEmailVerfication(userEmail) {
+    const params = '?' + new URLSearchParams({ userEmail }).toString();
+    const url = host + '/joinmember/resend-mail' + params;
+    const option = { ...defaultHeaders };
+    return customRequestToServer(url, option)
+      .then((value) => {
+        if (value.data === null) {
+          throw new ClientError(`paramter error: param: ${userEmail}`);
+        }
+        return value;
+      })
+      .catch((e) => {
+        if (e instanceof ClientError) {
+          e.print();
+        }
+        throw e;
+      });
+  }
+
+  function emailAuth(uuid) {
+    const params = '?' + new URLSearchParams({ uuid }).toString();
+    const url = host + '/joinmember/email-auth' + params;
+    const option = { ...defaultHeaders };
+    return requestToServer(url, option);
+  }
+
   return {
     getPoolsByGeoLocation: getPoolsByGeoLocation,
     getPoolsByName: getPoolsByName,
     getPoolDetailById: getPoolDetailById,
     getPoolListByLocation: getPoolListByLocation,
+    signUp: signUp,
+    resendEmailVerfication: resendEmailVerfication,
+    emailAuth: emailAuth,
   };
 })();
 

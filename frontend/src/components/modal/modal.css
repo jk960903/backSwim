@@ -1,0 +1,42 @@
+@import url(../../root.css);
+
+:root {
+  --alert-modal-max-size: 250px;
+  --alert-modal-top-padding: 10vh;
+  --alert-modal-height: calc(var(--alert-modal-max-size) * 2 / 5);
+}
+
+#modal {
+  position: fixed;
+  z-index: 1;
+  padding-top: var(--alert-modal-top-padding);
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: var(--opacity-black-color);
+}
+
+.modal-window {
+  background-color: rgb(255, 255, 255, 0.8);
+  border-radius: 10px;
+  border: var(--thick-border);
+  max-width: var(--alert-modal-max-size);
+  height: var(--alert-modal-height);
+  margin: auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  padding: 5px;
+  overflow-y: hidden;
+}
+
+.modal-content {
+  text-align: center;
+  font-size: 1rem;
+}
+
+.button-container {
+  display: flex;
+  justify-content: center;
+}

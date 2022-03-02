@@ -1,0 +1,28 @@
+@import url(../../root.css);
+
+:root {
+  --window-max-width: 500px;
+  --window-padding: 10px;
+
+  --sign-up-item-gap: 10px;
+  --sign-up-item-input-gap: 5px;
+}
+
+.email-sent-container {
+  display: flex;
+  flex-direction: row;
+  border: var(--default-border);
+  border-radius: 10px;
+  max-width: var(--window-max-width);
+  margin: auto;
+  font-size: 1rem;
+  padding: var(--window-padding);
+}
+
+.email-sent-container > span {
+  padding: 10px;
+}
+
+.email-sent-container >button {
+  background-color: var(--sky-color);
+}
