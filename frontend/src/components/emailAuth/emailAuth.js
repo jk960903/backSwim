@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { withRouterHook } from '#utils/withRouter';
 import MyRequest from '#common/myRequest';
-import AlertModal from '#components/modal/alertModa';
+import AlertModal from '#components/modal/alertModal';
 import { SignUpError } from '#common/myError';
 class EmailAuth extends React.Component {
   constructor(props) {

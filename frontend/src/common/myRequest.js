@@ -19,7 +19,7 @@ const MyRequest = (() => {
           throw new ClientError(data, 'there is no statusCode');
         }
 
-        if (data.statusCode !== 200) {
+        if (data.statusCode !== 401 && data.statusCode !== 200) {
           throw new ClientError(data, 'statuscode error');
         }
         return data;
@@ -42,7 +42,7 @@ const MyRequest = (() => {
           throw new ClientError(data, 'there is no statusCode');
         }
 
-        if (data.statusCode !== 200) {
+        if (data.statusCode !== 401 && data.statusCode !== 200) {
           throw new ClientError(data, 'statuscode error');
         }
         return data;
@@ -87,6 +87,15 @@ const MyRequest = (() => {
     return requestToServer(url, option);
   }
 
+  function signIn(userEmail, password) {
+    const data = { userEmail, password };
+    const url = host + '/login/login';
+    const option = { ...defaultOption };
+    option.method = 'POST';
+    option.body = JSON.stringify(data);
+    return requestToServer(url, option);
+  }
+
   function resendEmailVerfication(userEmail) {
     const params = '?' + new URLSearchParams({ userEmail }).toString();
     const url = host + '/joinmember/resend-mail' + params;
@@ -119,6 +128,7 @@ const MyRequest = (() => {
     getPoolDetailById: getPoolDetailById,
     getPoolListByLocation: getPoolListByLocation,
     signUp: signUp,
+    signIn: signIn,
     resendEmailVerfication: resendEmailVerfication,
     emailAuth: emailAuth,
   };

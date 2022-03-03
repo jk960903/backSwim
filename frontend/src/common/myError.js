@@ -21,8 +21,9 @@ class ClientError extends Error {
 
 /**
  *
- * 유저 에러입니다. e.g) 중복된 회원가입, 아이디 및 패스워드 오류
- * @class SignUpError
+ * 아래는 유저 에러로, 유저의 interaction으로 인한 에러입니다.
+ * 유저에게 에러를 표시 합니다
+ * @class ...
  * @extends {Error}
  */
 class SignUpError extends Error {
@@ -37,4 +38,16 @@ class SignUpError extends Error {
   }
 }
 
-export { SignUpError, ClientError };
+class SignInError extends Error {
+  constructor(...params) {
+    super(...params);
+
+    this.name = 'SignInError';
+  }
+
+  print() {
+    console.error(`${this.name}: ${this.message}`);
+  }
+}
+
+export { SignUpError, SignInError, ClientError };

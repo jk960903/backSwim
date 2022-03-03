@@ -1,0 +1,48 @@
+/* TODO: signUp.css와 합치기 */
+@import url(../../root.css);
+
+:root {
+  --sign-in-max-width: 500px;
+  --sign-in-padding: 10px;
+
+  --sign-in-item-gap: 10px;
+  --sign-in-item-input-gap: 5px;
+}
+
+.sign-in-container {
+  display: flex;
+  flex-direction: column;
+  border: var(--default-border);
+  border-radius: 10px;
+  max-width: var(--sign-in-max-width);
+  margin: auto;
+  font-size: 1rem;
+  padding: var(--sign-in-padding);
+}
+
+.sign-in-container > *:not(:last-child) {
+  margin-bottom: var(--sign-in-item-gap);
+}
+
+.sign-in-item {
+  display: flex;
+  flex-direction: column;
+}
+
+.sign-in-item > *:not(:last-child) {
+  margin-bottom: var(--sign-in-item-input-gap);
+}
+
+.sign-in-item > input {
+  border: var(--default-border);
+}
+
+.sign-in-item-alert {
+  font-size: 0.8rem;
+  color: var(--red-color);
+}
+
+.sign-in-item-btn {
+  margin: auto;
+  background-color: var(--half-sky-color);
+}

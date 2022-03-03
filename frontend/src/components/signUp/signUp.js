@@ -5,7 +5,7 @@ import debounce from '#utils/debounce';
 import { emailValidation, passwordValidation } from '#utils/validation';
 import MyRequest from '#common/myRequest';
 import { withRouterHook } from '#utils/withRouter';
-import AlertModal from '#components/modal/alertModa';
+import AlertModal from '#components/modal/alertModal';
 import { SignUpError } from '#common/myError';
 
 /* TODO: ref와 state의 차이 */
@@ -60,7 +60,6 @@ class SignUp extends React.Component {
     }
   }
 
-  /* TODO: Modal Window 필요 */
   submitHandler(e) {
     e.preventDefault();
 
@@ -74,7 +73,7 @@ class SignUp extends React.Component {
           throw new SignUpError('이메일 또는 패스워드를 확인해주세요');
         }
         this.props.navigate('/emailSent', {
-          state: { email: this.email, password: this.password },
+          state: { email: this.email, isSent: true },
         });
       })
       .catch((err) => {
@@ -136,7 +135,6 @@ class SignUp extends React.Component {
       </form>
       {this.renderAlertModal()}
       </>
-
     );
   }
 }

@@ -4,7 +4,7 @@ import debounce from '#utils/debounce';
 import PropTypes from 'prop-types';
 import { withRouterHook } from '#utils/withRouter';
 import MyRequest from '#common/myRequest';
-import AlertModal from '#components/modal/alertModa';
+import AlertModal from '#components/modal/alertModal';
 
 class EmailSent extends React.Component {
   constructor(props) {
@@ -16,6 +16,15 @@ class EmailSent extends React.Component {
         content: '',
       },
     };
+  }
+
+  /* TODO: refresh 일 때 전송하지 않게 수정 필요 */
+  componentDidMount() {
+    console.log(this.isReload);
+    const { isSent } = this.props.locationState;
+    if (isSent === false) {
+      this.handlerSentBtn();
+    }
   }
 
   setModalOpenFalse() {
@@ -65,7 +74,7 @@ class EmailSent extends React.Component {
 }
 
 EmailSent.propTypes = {
-  locationState: PropTypes.object,
+  locationState: PropTypes.object.isRequired,
 };
 
 export default withRouterHook(EmailSent);
