@@ -64,7 +64,7 @@ class SignIn extends React.Component {
         } else if (value.data === null) {
           throw new SignInError('이메일 또는 패스워드를 확인해주세요');
         } else {
-          this.props.navigate('/');
+          this.props.navigate('/', { state: { isLogin: true } });
         }
       })
       .catch((err) => {

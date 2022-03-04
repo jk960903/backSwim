@@ -6,6 +6,8 @@ import SideBar from '#components/sideBar/sideBar.js';
 import './home.css';
 import { EXT } from '#common/myTypes.js';
 import { PoolNode } from '#common/myNodes.js';
+import { withRouterHook } from '#utils/withRouter';
+import PropTypes from 'prop-types';
 
 class Home extends React.Component {
   constructor(props) {
@@ -16,6 +18,15 @@ class Home extends React.Component {
       curPool: null,
       curPoolDetail: null,
     };
+  }
+
+  componentDidMount() {
+    if (this.props.locationState === null) return;
+
+    const { isLogin } = this.props.locationState;
+    if (typeof isLogin === 'boolean') {
+      this.setState({ isLogin: isLogin });
+    }
   }
 
   setCurExt(target) {
@@ -68,4 +79,8 @@ class Home extends React.Component {
   }
 }
 
-export default Home;
+Home.propTypes = {
+  locationState: PropTypes.object,
+};
+
+export default withRouterHook(Home);

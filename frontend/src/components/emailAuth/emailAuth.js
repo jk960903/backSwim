@@ -16,7 +16,6 @@ class EmailAuth extends React.Component {
   }
 
   componentDidMount() {
-    console.log(this.props.query.get('uuid'));
     const uuid = this.props.query.get('uuid');
 
     MyRequest.emailAuth(uuid)
