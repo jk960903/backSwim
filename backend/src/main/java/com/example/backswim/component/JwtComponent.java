@@ -13,8 +13,10 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Component;
+import org.springframework.web.bind.annotation.CookieValue;
 
 import javax.annotation.PostConstruct;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import java.util.Base64;
 import java.util.Date;
@@ -28,7 +30,7 @@ public class JwtComponent {
     @Value("${security.jwt.token.secret-key")
     private String securityKey;// 민감 정보 숨기는 방법
 
-    private final Long expiredTime = 1000 * 60L * 60L * 3L; //3시간
+    private final Long expiredTime = 1000 * 60L * 60L * 24L * 30; //30일
 
     private final UserDetailsService userDetailsService;
 
@@ -94,7 +96,21 @@ public class JwtComponent {
     }
 
     public String resolveToken(HttpServletRequest request){
-        return request.getHeader("X-AUTH-TOKEN");
+        Cookie[] cookies = request.getCookies();
+        String token = null;
+
+        if(cookies == null){
+            return null;
+        }
+
+        for(Cookie cookie : cookies){
+            if(cookie.getName().equals("JWTTOKEN")){
+                token = cookie.getValue();
+            }
+        }
+
+        return token;
+        //return request.getHeader("X-AUTH-TOKEN");
     }
 
     public boolean validateToken(String token){

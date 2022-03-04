@@ -23,8 +23,7 @@ import java.util.stream.Stream;
 import static org.hamcrest.Matchers.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 /**
  * 이페이지 그대로 실행하면 돌아가지 않음
@@ -47,7 +46,7 @@ public class UserLoginTest extends TestPackage{
 
     static Stream<Arguments> LoginSuccessCase(){
         return Stream.of(
-                Arguments.arguments(new LoginRequestParam("benzen903@gmail.com","*****"))
+                Arguments.arguments(new LoginRequestParam("benzen903@gmail.com","backswim123"))
         );
     }
     static Stream<Arguments> LoginFailNotEmailAuth(){
@@ -81,7 +80,8 @@ public class UserLoginTest extends TestPackage{
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.statusCode",is(200)))
                 .andExpect(jsonPath("$.data",notNullValue()))
-                .andExpect(jsonPath("$.message").value(StatusEnum.OK.name()));
+                .andExpect(jsonPath("$.message").value(StatusEnum.OK.name()))
+                .andExpect(cookie().value("JWTTOKEN",notNullValue()));
     }
 
     @DisplayName("로그인 실패 이메일 인증 X")
@@ -92,7 +92,8 @@ public class UserLoginTest extends TestPackage{
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.statusCode",is(401)))
                 .andExpect(jsonPath("$.data",nullValue()))
-                .andExpect(jsonPath("$.message").value(StatusEnum.AUTH_FIRST.name()));
+                .andExpect(jsonPath("$.message").value(StatusEnum.AUTH_FIRST.name()))
+                .andExpect(cookie().value("JWTTOKEN",nullValue()));
     }
 
     @DisplayName("로그인 실패 비밀번호 오류")
@@ -103,7 +104,8 @@ public class UserLoginTest extends TestPackage{
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.statusCode",is(401)))
                 .andExpect(jsonPath("$.data",nullValue()))
-                .andExpect(jsonPath("$.message").value(StatusEnum.WRONG_PASSWORD.name()));
+                .andExpect(jsonPath("$.message").value(StatusEnum.WRONG_PASSWORD.name()))
+                .andExpect(cookie().value("JWTTOKEN",nullValue()));
     }
 
     @DisplayName("로그인 실패 파라미터 null")
@@ -114,6 +116,7 @@ public class UserLoginTest extends TestPackage{
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.statusCode",is(400)))
                 .andExpect(jsonPath("$.data",nullValue()))
-                .andExpect(jsonPath("$.message").value(StatusEnum.BAD_REQUEST.name()));
+                .andExpect(jsonPath("$.message").value(StatusEnum.BAD_REQUEST.name()))
+                .andExpect(cookie().value("JWTTOKEN",nullValue()));
     }
 }
