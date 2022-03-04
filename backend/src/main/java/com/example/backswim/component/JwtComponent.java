@@ -30,7 +30,14 @@ public class JwtComponent {
     @Value("${security.jwt.token.secret-key")
     private String securityKey;// 민감 정보 숨기는 방법
 
-    private final Long expiredTime = 1000 * 60L * 60L * 24L * 30; //30일
+
+    private long expiredSec = 3600;
+
+    private long expireTime = 24;
+
+    private long expireDay = 3;
+
+    private final Long expiredTime = 1000 * expiredSec * expireTime * expireDay; //30일
 
     private final UserDetailsService userDetailsService;
 

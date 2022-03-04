@@ -31,7 +31,7 @@ public class LoginController extends CommonController {
         String token = jwtComponent.resolveToken(request);
 
         if(jwtComponent.validateToken(token)){
-
+            //TODO
         }
 
         if(token != null){
