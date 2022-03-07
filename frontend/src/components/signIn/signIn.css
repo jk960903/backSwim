@@ -37,6 +37,11 @@
   border: var(--default-border);
 }
 
+.sign-in-item-reset-password {
+  font-size: 0.7rem;
+  text-align: right;
+}
+
 .sign-in-item-alert {
   font-size: 0.8rem;
   color: var(--red-color);

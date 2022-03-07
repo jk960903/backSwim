@@ -99,6 +99,21 @@ class SignIn extends React.Component {
     );
   }
 
+  renderResetPassword() {
+    function handlerResetPassword() {
+      this.props.navigate('/resetPassword');
+    }
+
+    return (
+      <div
+        className="sign-in-item sign-in-item-reset-password"
+        onClick={handlerResetPassword.bind(this)}
+      >
+        비밀번호를 잃어버리셨나요?
+      </div>
+    );
+  }
+
   render() {
     return (
       <>
@@ -120,6 +135,7 @@ class SignIn extends React.Component {
                 autoComplete="on"
               />
             </div>
+            {this.renderResetPassword()}
             {this.renderAlert()}
             <button
               type="submit"

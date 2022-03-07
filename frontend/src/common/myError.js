@@ -26,28 +26,53 @@ class ClientError extends Error {
  * @class ...
  * @extends {Error}
  */
-class SignUpError extends Error {
+class UserError extends Error {
+  constructor(...params) {
+    super(...params);
+  }
+
+  print() {
+    console.error(`${this.name}: ${this.message}`);
+  }
+}
+
+class SignUpError extends UserError {
   constructor(...params) {
     super(...params);
 
     this.name = 'SignUpError';
   }
-
-  print() {
-    console.error(`${this.name}: ${this.message}`);
-  }
 }
 
-class SignInError extends Error {
+class SignInError extends UserError {
   constructor(...params) {
     super(...params);
 
     this.name = 'SignInError';
   }
+}
 
-  print() {
-    console.error(`${this.name}: ${this.message}`);
+class ResetPasswordError extends UserError {
+  constructor(...params) {
+    super(...params);
+
+    this.name = 'ResetPasswordError';
   }
 }
 
-export { SignUpError, SignInError, ClientError };
+class ChangePasswordError extends UserError {
+  constructor(...params) {
+    super(...params);
+
+    this.name = 'ChangePasswordError';
+  }
+}
+
+export {
+  UserError,
+  SignUpError,
+  SignInError,
+  ClientError,
+  ResetPasswordError,
+  ChangePasswordError,
+};

@@ -7,6 +7,8 @@ import MyPage from '#components/myPage/myPage.js';
 import NotFound from '#components/notFound/notFound';
 import EmailSent from '#components/emailSent/emailSent';
 import EmailAuth from '#components/emailAuth/emailAuth';
+import ResetPassword from '#components/resetPassword/resetPassword';
+import ChangePassword from '#components/changePassword/changePassword';
 
 class App extends React.Component {
   constructor(props) {
@@ -16,6 +18,8 @@ class App extends React.Component {
     };
   }
 
+  /* TODO: path 인증, 렌더링 관점에서 개선 필요*/
+  /* TODO: path 이름 수정 */
   render() {
     return (
       <BrowserRouter>
@@ -23,6 +27,8 @@ class App extends React.Component {
           <Route path="/" element={<Home></Home>}></Route>
           <Route path="/signIn" element={<SignIn></SignIn>}></Route>
           <Route path="/signUp" element={<SignUp></SignUp>}></Route>
+          <Route path="/resetPassword" element={<ResetPassword></ResetPassword>}></Route>
+          <Route path="/changePassword" element={<ChangePassword></ChangePassword>}></Route>
           <Route path="/myPage" element={<MyPage></MyPage>}></Route>
           <Route path="/emailSent" element={<EmailSent></EmailSent>}></Route>
           <Route path="/emailAuth" element={<EmailAuth></EmailAuth>}></Route>

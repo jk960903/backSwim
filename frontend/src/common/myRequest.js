@@ -1,5 +1,6 @@
 import { ClientError } from './myError';
 
+/* TODO: get option, post option 구분 필요 */
 // closures in charge of interation with the server
 const MyRequest = (() => {
   const host = 'http://localhost:3000/backswim/api';
@@ -122,6 +123,22 @@ const MyRequest = (() => {
     return requestToServer(url, option);
   }
 
+  function resetPassword(userEmail) {
+    const params = '?' + new URLSearchParams({ userEmail }).toString();
+    const url = host + '/joinmember/resetpassword' + params;
+    const option = { ...defaultHeaders };
+    return requestToServer(url, option);
+  }
+
+  function changePassword(uuid, password) {
+    const data = { uuid, password };
+    const url = host + '/joinmember/changepassword';
+    const option = { ...defaultOption };
+    option.method = 'POST';
+    option.body = JSON.stringify(data);
+    return requestToServer(url, option);
+  }
+
   return {
     getPoolsByGeoLocation: getPoolsByGeoLocation,
     getPoolsByName: getPoolsByName,
@@ -131,6 +148,8 @@ const MyRequest = (() => {
     signIn: signIn,
     resendEmailVerfication: resendEmailVerfication,
     emailAuth: emailAuth,
+    resetPassword: resetPassword,
+    changePassword: changePassword,
   };
 })();
 
