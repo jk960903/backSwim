@@ -48,6 +48,7 @@ public class LoginController extends CommonController {
                 Cookie cookie = new Cookie("JWTTOKEN",result);
 
                 cookie.setMaxAge(3600 * 24 * 30); // 쿠키 설정 30일
+                cookie.setPath("/");
 
                 response.addCookie(cookie);
             }
@@ -63,6 +64,35 @@ public class LoginController extends CommonController {
             return new APIResult<>(500,null,StatusEnum.INTERNAL_SERVER_ERROR);
         }
         return new APIResult<>(200,result,StatusEnum.OK);
+    }
+
+    @GetMapping("/logout")
+    public APIResult<Boolean> logout(HttpServletRequest request , HttpServletResponse response){
+        boolean result = false;
+        String token = jwtComponent.resolveToken(request);
+
+        if(token == null){
+            return new APIResult<>(401,null ,StatusEnum.ALREADY_LOGOUT);
+        }
+        try{
+            Cookie cookie = new Cookie("JWTTOKEN",null);
+            cookie.setPath("/");
+
+            response.addCookie(cookie);
+            PrintLog(request);
+            result = true;
+        }catch(Exception e){
+            PrintErrorLog(request);
+            return new APIResult<>(500,null,StatusEnum.INTERNAL_SERVER_ERROR);
+        }
+
+        return new APIResult<>(200,result,StatusEnum.OK);
+    }
+
+    @RequestMapping("/denied")
+    public APIResult<Boolean> denied(HttpServletRequest request){
+        PrintLog(request);
+        return new APIResult<>(401,null,StatusEnum.LOGIN_FIRST);
     }
 
 }

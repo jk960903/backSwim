@@ -12,11 +12,18 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfiguration;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 
 @RequiredArgsConstructor
 @Configuration
@@ -55,12 +62,21 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 "/admin/makechosung",
                 "/api/search/searchaddress",
                 "/api/joinmember/*",
+                "/api/login/denied",
                 "/api/login/login").permitAll()
                 .anyRequest().hasRole("USER")
                 .and().addFilterBefore(new JwtAuthenticationFilter(jwtComponent), UsernamePasswordAuthenticationFilter.class);
                 ;
 
+        http.logout().logoutRequestMatcher(new AntPathRequestMatcher("/api/logout/logout"))
+                .logoutSuccessUrl("/api/login/logout").deleteCookies().invalidateHttpSession(false);
 
+        http.exceptionHandling().authenticationEntryPoint(new AuthenticationEntryPoint() {
+            @Override
+            public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException, ServletException {
+                response.sendRedirect("/api/login/denied");
+            }
+        });
 
     }
 
