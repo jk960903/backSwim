@@ -117,15 +117,16 @@ public class UserServiceImpl implements UserService{
         }
         UserEntity userEntity = optionalUser.get();
 
+        PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+        if(!passwordEncoder.matches(param.getPassword(),userEntity.getPassword())){
+            throw new WrongPasswordException("WRONG PASSWORD");
+        }
+
         if(!userEntity.isEmailAuthYn()){
             throw new UserNotEmailAuthException("GET EMAIL AUTH FIRST");
         }
 
 
-        PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-        if(!passwordEncoder.matches(param.getPassword(),userEntity.getPassword())){
-            throw new WrongPasswordException("WRONG PASSWORD");
-        }
 
         // 다음 스프린트 진행에 로그인 history 작성하는 부분 추가하도록 고려
 
