@@ -71,6 +71,7 @@ public class JwtComponent {
         Map<String, Object> claims = new HashMap<>();
 
         claims.put("username",userEntity.getUserEmail());
+        claims.put("userId",userEntity.getSeq());
         return claims;
     }
 
@@ -113,6 +114,10 @@ public class JwtComponent {
         for(Cookie cookie : cookies){
             if(cookie.getName().equals("JWTTOKEN")){
                 token = cookie.getValue();
+
+                if(token.equals("")){
+                    return null;
+                }
             }
         }
 
