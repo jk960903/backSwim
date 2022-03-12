@@ -95,12 +95,20 @@ public class JwtComponent {
     }
 
     /**
-     * 테스트 코드만을 위한 코드
+     * 토큰으로부터 이메일 도출
      * @param token
      * @return
      */
     public String getUserName(String token){
         return (String)Jwts.parser().setSigningKey(securityKey).parseClaimsJws(token).getBody().get("username");
+    }
+
+    /**
+     * 토큰으로 부터 유저 id 도출
+     * @return
+     */
+    public int getUserId(String token){
+        return (int)getClaims(token).get("userId");
     }
 
     public String resolveToken(HttpServletRequest request){

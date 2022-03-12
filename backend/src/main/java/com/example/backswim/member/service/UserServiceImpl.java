@@ -2,6 +2,7 @@ package com.example.backswim.member.service;
 
 import com.example.backswim.component.JwtComponent;
 import com.example.backswim.component.MailComponents;
+import com.example.backswim.member.dto.UserDto;
 import com.example.backswim.member.entity.EmailEntity;
 import com.example.backswim.member.entity.UserEntity;
 import com.example.backswim.member.exception.UserNotEmailAuthException;
@@ -17,7 +18,11 @@ import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.util.FileCopyUtils;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.concurrent.TimeoutException;
@@ -289,6 +294,99 @@ public class UserServiceImpl implements UserService{
         return result;
     }
 
+    @Override
+    public boolean uploadProfileImage(MultipartFile file, int userId) throws Exception{
+        boolean result = false;
+
+        Optional<UserEntity> optionalUserEntity = userRepository.findById(userId);
+
+        if(optionalUserEntity.isEmpty()){
+            return false;
+        }
+
+        if(file == null){
+            return false;
+        }
+
+        //String basePath = "/Users/leejunkyu/Desktop/backswim/backend/files";
+        String basePath = "/home/ubuntu/apache-tomcat-9.0.56/webapps/backswim/files";
+        //String basePath = "/files";
+        //String basePath = "/home/ubuntu/apache-tomcat";
+
+        //basePath = "/files";
+        String orignalFileName = file.getOriginalFilename();
+        String saveFilename = getNewSaveFile(basePath,orignalFileName);
+        try{
+            File newFile = new File(saveFilename);
+
+            FileCopyUtils.copy(file.getInputStream(),new FileOutputStream(newFile));
+
+        }catch(Exception e){
+            throw new Exception(e.getMessage());
+        }
+        UserEntity userEntity = optionalUserEntity.get();
+
+        userEntity.setImgUrl(saveFilename);
+
+        userRepository.save(userEntity);
+
+        result =true;
+        return result;
+    }
+
+    @Override
+    public UserDto getmyPage(int id) {
+        Optional<UserEntity> optionalUser = userRepository.findById(id);
+
+        if(optionalUser.isEmpty()){
+            return null;
+        }
+
+        UserEntity userEntity = optionalUser.get();
+
+        UserDto userDto = UserDto.of(userEntity);
+        if(userDto.getImageURL() == null){
+            userDto.setImageURL("");
+        }
+        return userDto;
+    }
+
+    private String getNewSaveFile(String basePath,String originalFileName){
+
+
+        String[] dirs = {
+                String.format("%s/%d",basePath,LocalDateTime.now().getYear()),
+                String.format("%s/%d/%02d/",basePath,
+                        LocalDateTime.now().getYear(),LocalDateTime.now().getMonthValue()),
+                String.format("%s/%d/%02d/%03d/",basePath,LocalDateTime.now().getYear(),LocalDateTime.now().getMonthValue()
+                        ,LocalDateTime.now().getDayOfMonth())
+
+        };
+
+        for(String dir : dirs){
+            File file = new File(dir);
+            if(!file.isDirectory()){
+                file.mkdir();
+            }
+        }
+
+        String fileExtension = "";
+
+        if(originalFileName != null){
+            int dotPos = originalFileName.lastIndexOf(".");
+            if(dotPos > -1 ){
+                fileExtension = originalFileName.substring(dotPos+1);
+            }
+
+        }
+        String uuid = UUID.randomUUID().toString().replaceAll("-","");
+        String newFileName = String.format("%s%s",dirs[2],uuid);
+        if(fileExtension.length() > 0){
+            newFileName +="." + fileExtension;
+        }
+
+        return newFileName;
+    }
     private void getAuthentication(String email , String password){
         //PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
         //password = passwordEncoder.encode(password);

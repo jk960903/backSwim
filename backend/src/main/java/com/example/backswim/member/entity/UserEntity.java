@@ -48,6 +48,7 @@ public class UserEntity implements UserDetails {
 
     private String imgUrl;
 
+    private String imgName;
 
     @ElementCollection(fetch = FetchType.EAGER)
     @Builder.Default
