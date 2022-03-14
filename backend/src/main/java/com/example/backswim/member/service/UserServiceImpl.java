@@ -382,6 +382,11 @@ public class UserServiceImpl implements UserService{
 
         UserEntity userEntity = optionalUser.get();
 
+        PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+        if(!passwordEncoder.matches(param.getBeforePassword(),userEntity.getPassword())){
+            throw new WrongPasswordException("WRONG PASSWORD");
+        }
+
         String encPassword = BCrypt.hashpw(param.getChangePassword(),BCrypt.gensalt());
 
         userEntity.setPassword(encPassword);

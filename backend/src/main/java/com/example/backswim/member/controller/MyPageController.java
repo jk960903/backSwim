@@ -106,6 +106,8 @@ public class MyPageController extends CommonController {
             result = userService.updatePassword(param,id);
         }catch(UserNotFoundException e){
             return new APIResult<>(401,null,StatusEnum.EXPIRED_TOKEN);
+        }catch(WrongPasswordException e){
+            return new APIResult<>(401,null, StatusEnum.WRONG_PASSWORD);
         }catch(Exception e){
             return new APIResult<>(500,null,StatusEnum.INTERNAL_SERVER_ERROR);
         }

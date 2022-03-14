@@ -2,6 +2,7 @@ package com.example.backswim.member.service;
 
 
 import com.example.backswim.member.dto.UserDto;
+import com.example.backswim.member.exception.UserNotFoundException;
 import com.example.backswim.member.exception.WrongPasswordException;
 import com.example.backswim.member.params.*;
 import com.example.backswim.member.params.login.LoginRequestParam;
@@ -36,7 +37,7 @@ public interface UserService{
 
     UserDto getmyPage(int id);
 
-    boolean checkPassword(CheckPasswordParam param,int id) throws WrongPasswordException;
+    boolean checkPassword(CheckPasswordParam param,int id) throws WrongPasswordException,UserNotFoundException;
 
-    boolean updatePassword(UpdateUserPassword param, int id);
+    boolean updatePassword(UpdateUserPassword param, int id)throws WrongPasswordException, UserNotFoundException;
 }
