@@ -5,9 +5,12 @@ import com.example.backswim.common.api.enums.StatusEnum;
 import com.example.backswim.common.controller.CommonController;
 import com.example.backswim.component.JwtComponent;
 import com.example.backswim.member.dto.UserDto;
+import com.example.backswim.member.exception.UserNotFoundException;
+import com.example.backswim.member.exception.WrongPasswordException;
 import com.example.backswim.member.params.ChangePasswordParam;
 import com.example.backswim.member.params.mypage.CheckPasswordParam;
 import com.example.backswim.member.params.mypage.UpdateUserParam;
+import com.example.backswim.member.params.mypage.UpdateUserPassword;
 import com.example.backswim.member.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -33,18 +36,28 @@ public class MyPageController extends CommonController {
     @PostMapping("/checkpassword")
     public APIResult<Boolean> checkPassword(HttpServletRequest request , @RequestBody CheckPasswordParam param){
         boolean result = false;
-        if(param.checkStatus()){
+        if(!param.checkStatus()){
             return new APIResult<>(400,null, StatusEnum.BAD_REQUEST);
         }
 
         try{
             String token = jwtComponent.resolveToken(request);
             if(jwtComponent.validateToken(token)){
-                //TODO Token Claim으로부터 userSeq 가져와서 해당 아이디로 유저 검색 및 패스워드 비교 service 매핑
-                result = true;
-            }
-        }catch(Exception e){
+                int id = jwtComponent.getUserId(token);
 
+                result = userService.checkPassword(param,id);
+
+                PrintLog(request);
+            }
+        }catch(WrongPasswordException e){
+            PrintErrorLog(request);
+            return new APIResult<>(200,result,StatusEnum.OK);
+        }catch(UserNotFoundException e){
+            PrintErrorLog(request);
+            return new APIResult<>(401,null,StatusEnum.EXPIRED_TOKEN);
+        }catch(Exception e){
+            PrintErrorLog(request);
+            return new APIResult<>(500,result,StatusEnum.INTERNAL_SERVER_ERROR);
         }
         return new APIResult<>(200,result,StatusEnum.OK);
     }
@@ -57,29 +70,47 @@ public class MyPageController extends CommonController {
      * @return
      */
     @PostMapping("/updateuserimage")
-    public String updateUser(HttpServletRequest request, @RequestParam MultipartFile file){
+    public APIResult<Boolean> updateUser(HttpServletRequest request, @RequestParam MultipartFile file){
         String token = jwtComponent.resolveToken(request);
         boolean result = false;
         if(token == null){
-            //return new APIResult<>(401,null,StatusEnum.LOGIN_FIRST);
-            return "tokenerror";
+            return new APIResult<>(401,null,StatusEnum.LOGIN_FIRST);
+        }
+        if(file == null){
+            return new APIResult<>(400,null,StatusEnum.BAD_REQUEST);
         }
         try{
             int id = jwtComponent.getUserId(token);
-            //String id = jwtComponent.getUserId(token);
+
             result = userService.uploadProfileImage(file,id);
         }catch(Exception e){
-            e.printStackTrace();
-            return e.getMessage();
+            return new APIResult<>(500,null,StatusEnum.INTERNAL_SERVER_ERROR);
         }
 
-        return "SUCCESS";
-        //return new APIResult<>(200,result,StatusEnum.OK);
+        return new APIResult<>(200,result,StatusEnum.OK);
     }
 
     @PostMapping("/updateuserpassword")
-    public APIResult<Boolean> updateUserPassword(HttpServletRequest request, @RequestBody ChangePasswordParam param){
-        return null;
+    public APIResult<Boolean> updateUserPassword(HttpServletRequest request, @RequestBody UpdateUserPassword param){
+        boolean result = false;
+        if(!param.checkStatus()){
+            return new APIResult<>(400,null, StatusEnum.BAD_REQUEST);
+        }
+        try{
+            String token = jwtComponent.resolveToken(request);
+            if(!jwtComponent.validateToken(token)){
+                return new APIResult<>(401,null,StatusEnum.EXPIRED_TOKEN);
+            }
+            int id = jwtComponent.getUserId(token);
+
+            result = userService.updatePassword(param,id);
+        }catch(UserNotFoundException e){
+            return new APIResult<>(401,null,StatusEnum.EXPIRED_TOKEN);
+        }catch(Exception e){
+            return new APIResult<>(500,null,StatusEnum.INTERNAL_SERVER_ERROR);
+        }
+
+        return new APIResult<>(200,result,StatusEnum.OK);
     }
     @GetMapping("/getmypage")
     public APIResult<UserDto> getmypage(HttpServletRequest request){

@@ -6,9 +6,12 @@ import com.example.backswim.member.dto.UserDto;
 import com.example.backswim.member.entity.EmailEntity;
 import com.example.backswim.member.entity.UserEntity;
 import com.example.backswim.member.exception.UserNotEmailAuthException;
+import com.example.backswim.member.exception.UserNotFoundException;
 import com.example.backswim.member.exception.WrongPasswordException;
 import com.example.backswim.member.params.*;
 import com.example.backswim.member.params.login.LoginRequestParam;
+import com.example.backswim.member.params.mypage.CheckPasswordParam;
+import com.example.backswim.member.params.mypage.UpdateUserPassword;
 import com.example.backswim.member.repository.EmailRepository;
 import com.example.backswim.member.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -349,6 +352,43 @@ public class UserServiceImpl implements UserService{
             userDto.setImageURL("");
         }
         return userDto;
+    }
+
+    @Override
+    public boolean checkPassword(CheckPasswordParam param, int id) throws WrongPasswordException{
+        Optional<UserEntity> optionalUser = userRepository.findById(id);
+
+        if(optionalUser.isEmpty()){
+            throw new UserNotFoundException("UserNot Found");
+        }
+
+        UserEntity userEntity = optionalUser.get();
+
+        PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+        if(!passwordEncoder.matches(param.getPassword(),userEntity.getPassword())){
+            throw new WrongPasswordException("WRONG PASSWORD");
+        }
+
+        return true;
+    }
+
+    @Override
+    public boolean updatePassword(UpdateUserPassword param, int id) {
+        Optional<UserEntity> optionalUser = userRepository.findById(id);
+
+        if(optionalUser.isEmpty()){
+            throw new UserNotFoundException("없는 유저입니다. ");
+        }
+
+        UserEntity userEntity = optionalUser.get();
+
+        String encPassword = BCrypt.hashpw(param.getChangePassword(),BCrypt.gensalt());
+
+        userEntity.setPassword(encPassword);
+
+        userRepository.save(userEntity);
+
+        return true;
     }
 
     private String getNewSaveFile(String basePath,String originalFileName){

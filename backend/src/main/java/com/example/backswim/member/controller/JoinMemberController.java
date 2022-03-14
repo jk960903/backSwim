@@ -142,7 +142,7 @@ public class JoinMemberController extends CommonController {
             result = userService.changePassword(param);
         }catch(TimeoutException e){
             PrintLog(request); // 서버에서 발생한 Error가 아니라 따로 Error Log 로 찍지않음
-            return new APIResult<>(400,null,StatusEnum.TIME_OUT);
+            return new APIResult<>(400,null,StatusEnum.EXPIRED_TOKEN);
         }catch(Exception e){
             PrintErrorLog(request);
             return new APIResult<>(500,null,StatusEnum.INTERNAL_SERVER_ERROR);
