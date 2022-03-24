@@ -20,7 +20,7 @@ import javax.servlet.http.HttpServletRequest;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/mypage")
+@RequestMapping("api/mypage")
 public class MyPageController extends CommonController {
 
     private final UserService userService;
@@ -48,10 +48,12 @@ public class MyPageController extends CommonController {
                 result = userService.checkPassword(param,id);
 
                 PrintLog(request);
+            }else{
+                return new APIResult<>(401,null,StatusEnum.EXPIRED_TOKEN);
             }
         }catch(WrongPasswordException e){
             PrintErrorLog(request);
-            return new APIResult<>(200,result,StatusEnum.OK);
+            return new APIResult<>(401,result,StatusEnum.WRONG_PASSWORD);
         }catch(UserNotFoundException e){
             PrintErrorLog(request);
             return new APIResult<>(401,null,StatusEnum.EXPIRED_TOKEN);
@@ -116,15 +118,21 @@ public class MyPageController extends CommonController {
     }
     @GetMapping("/getmypage")
     public APIResult<UserDto> getmypage(HttpServletRequest request){
-        String token = jwtComponent.resolveToken(request);
         UserDto userDto = null;
-        if(token == null){
-            return new APIResult<>(401,null,StatusEnum.LOGIN_FIRST);
-        }
-        try{
-            int id = jwtComponent.getUserId(token);
 
-            userDto = userService.getmyPage(id);
+        try{
+            String token = jwtComponent.resolveToken(request);
+            if(token == null){
+                return new APIResult<>(401,null,StatusEnum.LOGIN_FIRST);
+            }
+            if(!jwtComponent.validateToken(token)){
+                return new APIResult<>(401,null,StatusEnum.EXPIRED_TOKEN);
+            }
+            if(jwtComponent.validateToken(token)){
+                int id = jwtComponent.getUserId(token);
+
+                userDto = userService.getmyPage(id);
+            }
         }catch(Exception e){
             return new APIResult<>(500,null,StatusEnum.INTERNAL_SERVER_ERROR);
         }

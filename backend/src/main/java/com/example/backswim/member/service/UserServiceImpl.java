@@ -15,6 +15,7 @@ import com.example.backswim.member.params.mypage.UpdateUserPassword;
 import com.example.backswim.member.repository.EmailRepository;
 import com.example.backswim.member.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCrypt;
@@ -47,7 +48,8 @@ public class UserServiceImpl implements UserService{
 
     private final UserDetailsService userDetailsService;
 
-
+    @Value("${spring.file.directory}")
+    private String directory;
 
     @Override
     public boolean joinMember(JoinMemberParam param) {
@@ -311,8 +313,8 @@ public class UserServiceImpl implements UserService{
             return false;
         }
 
-        //String basePath = "/Users/leejunkyu/Desktop/backswim/backend/files";
-        String basePath = "/home/ubuntu/apache-tomcat-9.0.56/webapps/backswim/files";
+        String basePath = directory;
+        //String basePath = "/home/ubuntu/apache-tomcat-9.0.56/webapps/files";
         //String basePath = "/files";
         //String basePath = "/home/ubuntu/apache-tomcat";
 
