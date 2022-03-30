@@ -4,12 +4,14 @@ import com.example.backswim.common.api.enums.StatusEnum;
 import com.example.backswim.member.params.ChangePasswordParam;
 import com.example.backswim.member.params.CheckDuplicateID;
 import com.example.backswim.member.params.mypage.CheckPasswordParam;
+import com.example.backswim.member.params.mypage.UpdateUserPassword;
 import com.example.backswim.member.service.UserService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.ArgumentsSource;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -23,6 +25,7 @@ import org.springframework.web.filter.CharacterEncodingFilter;
 import com.example.backswim.TestPackage;
 
 import javax.servlet.http.Cookie;
+import javax.transaction.Transactional;
 import java.util.stream.Stream;
 
 import static org.hamcrest.Matchers.*;
@@ -71,6 +74,18 @@ public class MyPageTest extends TestPackage{
                 Arguments.arguments(new CheckPasswordParam("aslkdjgklwjkq"))
         );
     }
+    static Stream<Arguments> updateuserpasswordsuccess(){
+        return Stream.of(
+                Arguments.arguments(new UpdateUserPassword("backswim123","qwertqqq")),
+                Arguments.arguments(new UpdateUserPassword("backswim123","zxcvaaaaa"))
+        );
+    }
+    static Stream<Arguments> updateuserpasswordnull(){
+        return Stream.of(
+                Arguments.arguments(new UpdateUserPassword("null","null")),
+                Arguments.arguments(new UpdateUserPassword("null","null"))
+        );
+    }
     @DisplayName("마이페이지 비밀번호 체크 성공")
     @ParameterizedTest(name="/api/mypage/checkpassword")
     @MethodSource("checkPasswordSuccess")
@@ -104,6 +119,7 @@ public class MyPageTest extends TestPackage{
                 .andExpect(jsonPath("$.message").value(StatusEnum.WRONG_PASSWORD.name()));
     }
 
+
     @DisplayName("마이페이지 정보 GET 성공")
     @Test
     public void getMyPageTest() throws Exception{
@@ -135,4 +151,29 @@ public class MyPageTest extends TestPackage{
                 .andExpect(jsonPath("$.message").value(StatusEnum.EXPIRED_TOKEN.name()));
     }
 
+    @DisplayName("마이페이지 비밀번호 수정 성공")
+    @ParameterizedTest(name="/api/mypage/updateuserpassword")
+    @MethodSource("updateuserpasswordsuccess")
+    @Transactional
+    public void changePassword(UpdateUserPassword param) throws Exception{
+        mockMvc.perform(post("/api/mypage/updateuserpassword").cookie(new Cookie("JWTTOKEN",token)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.statusCode",is(200)))
+                .andExpect(jsonPath("$.data",is(true)))
+                .andExpect(jsonPath("$.message").value(StatusEnum.OK.name()));
+
+    }
+
+    @DisplayName("마이페이지 비밀번호 수정 널 파람")
+    @ParameterizedTest(name="/api/mypage/updateuserpassword")
+    @MethodSource("updateuserpasswordnull")
+    @Transactional
+    public void changePasswordnullTest(UpdateUserPassword param) throws Exception{
+        mockMvc.perform(post("/api/mypage/updateuserpassword").content(toJson(param)).cookie(new Cookie("JWTTOKEN",token)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.statusCode",is(400)))
+                .andExpect(jsonPath("$.data",nullValue()))
+                .andExpect(jsonPath("$.message").value(StatusEnum.BAD_REQUEST.name()));
+
+    }
 }
